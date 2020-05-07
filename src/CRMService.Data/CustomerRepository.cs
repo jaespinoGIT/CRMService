@@ -15,6 +15,15 @@ namespace CRMService.Data
 
         private readonly DbSet<Customer> _dbSet;
 
+        public CustomerRepository()
+        {
+
+        }
+        public CustomerRepository(DbSet<Customer> dbSet)
+        {
+            _dbSet = dbSet;
+        }
+
         public IQueryable<Customer> GetQueryable()
         {
             return _dbSet;
@@ -40,6 +49,11 @@ namespace CRMService.Data
             _context.Customers.Add(customer);
         }
 
+        public void AddCustomerAudit(CustomerAudit customerAudit)
+        {
+            _context.CustomerAudits.Add(customerAudit);
+        }
+
         public void DeleteCustomer(Customer customer)
         {
             _context.Customers.Remove(customer);
@@ -47,15 +61,14 @@ namespace CRMService.Data
 
         public async Task<bool> SaveChangesAsync()
         {
-            // Only return success if at least one row was changed
+            // Return success if at least one row was changed
             return (await _context.SaveChangesAsync()) > 0;
         }
 
         public async Task<List<Customer>> GetAllCustomersAsync()
         {
-            IQueryable<Customer> query = _context.Customers;                      
-
-            // Order It
+            IQueryable<Customer> query = _context.Customers;  
+          
             query = query.OrderByDescending(c => c.Name);
 
             return await query.ToListAsync();
@@ -65,6 +78,16 @@ namespace CRMService.Data
         public async Task<Customer> GetCustomerAsync(int customerId)
         {
             return await _context.Customers.FirstOrDefaultAsync(c => c.CustomerId == customerId);
+        }
+
+        public async Task<List<CustomerAudit>> GetCustomerAuditByUserIdAsync(int customerId)
+        {
+            IQueryable<CustomerAudit> query = _context.CustomerAudits
+                   .Where(t => t.Customer.CustomerId == customerId) 
+                   .OrderByDescending(s => s.Date)
+                   .Distinct();
+
+            return await query.ToListAsync();
         }
 
     }

@@ -19,6 +19,9 @@ namespace CRMService.Data
         void AddCustomer(Customer customer);
         void DeleteCustomer(Customer customer);
         Task<List<Customer>> GetAllCustomersAsync();
-        Task<Customer> GetCustomerAsync(int customerId);     
+        Task<Customer> GetCustomerAsync(int customerId);
+
+        // Customers audit
+        void AddCustomerAudit(CustomerAudit customerAudit);
     }
 }

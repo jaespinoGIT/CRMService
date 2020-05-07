@@ -15,6 +15,15 @@ namespace CRMService.Data
 
         private readonly DbSet<User> _dbSet;
 
+        public UserRepository()
+        {
+
+        }
+        public UserRepository(DbSet<User> dbSet)
+        {
+            _dbSet = dbSet;
+        }
+
         public IQueryable<User> GetQueryable()
         {
             return _dbSet;
@@ -40,9 +49,19 @@ namespace CRMService.Data
             _context.Users.Add(user);
         }
 
+        public void AddUserRole(UserRole userRole)
+        {
+            _context.UserRoles.Add(userRole);
+        }
+
         public void DeleteUser(User user)
         {
             _context.Users.Remove(user);
+        }
+
+        public void DeleteUserRole(UserRole userRole)
+        {
+            _context.UserRoles.Remove(userRole);
         }
 
         public async Task<bool> SaveChangesAsync()
@@ -53,7 +72,7 @@ namespace CRMService.Data
 
         public async Task<List<User>> GetAllUsersAsync()
         {
-            IQueryable<User> query = _context.Users;                      
+            IQueryable<User> query = _context.Users;
 
             // Order It
             query = query.OrderByDescending(c => c.Name);
@@ -66,6 +85,27 @@ namespace CRMService.Data
         {
             return await _context.Users.FirstOrDefaultAsync(c => c.UserId == userId);
         }
+
+        public async Task<Role> GetRoleByUserIdAsync(int userId, int roleId)
+        {
+            return await _context.UserRoles
+          .Where(t => t.User.UserId == userId)
+          .Select(t => t.Role)
+          .Where(s => s != null && s.RoleId == roleId)
+          .SingleOrDefaultAsync();
+        }
+
+        public async Task<Role[]> GetRolesByUserIdAsync(int userId)
+        {
+            IQueryable<Role> query = _context.UserRoles
+              .Where(t => t.User.UserId == userId)
+              .Select(t => t.Role)
+              .Where(s => s != null)
+              .Distinct();
+
+            return await query.ToArrayAsync();
+        }
+
 
     }
 }

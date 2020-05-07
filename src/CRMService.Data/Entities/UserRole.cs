@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CRMService.Data.Entities
 {
-    public class UserRoles
+    public class UserRole
     {
         public int UserRolesId { get; set; }
         public User User { get; set; }

@@ -22,7 +22,7 @@ namespace CRMService.Data
 
         public DbSet<Role> Roles { get; set; }
 
-        public DbSet<UserRoles> UserRoles { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
 
         public DbSet<CustomerAudit> CustomerAudits { get; set; }
 

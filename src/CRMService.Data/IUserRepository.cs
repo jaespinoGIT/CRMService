@@ -20,6 +20,13 @@ namespace CRMService.Data
         void AddUser(User user);
         void DeleteUser(User user);
         Task<List<User>> GetAllUsersAsync();
-        Task<User> GetUserAsync(int userId);     
+        Task<User> GetUserAsync(int userId);
+
+
+        // UserRole
+        void AddUserRole(UserRole userRole);
+        void DeleteUserRole(UserRole userRole);
+        Task<Role> GetRoleByUserIdAsync(int userId, int roleId);
+        Task<Role[]> GetRolesByUserIdAsync(int userId);
     }
 }
