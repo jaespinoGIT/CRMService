@@ -115,12 +115,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataContext.cs" />
+    <Compile Include="Migrations\202005071135336_Initial.cs" />
+    <Compile Include="Migrations\202005071135336_Initial.designer.cs">
+      <DependentUpon>202005071135336_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserRepository.cs" />
+    <Compile Include="Entities\CustomerAudit.cs" />
     <Compile Include="Entities\Customer.cs" />
     <Compile Include="Entities\Role.cs" />
     <Compile Include="Entities\User.cs" />
-    <Compile Include="Entities\User_Roles.cs" />
+    <Compile Include="Entities\UserRoles.cs" />
+    <Compile Include="CustomerRepository.cs" />
+    <Compile Include="IUserRepository.cs" />
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Migrations\InitialCreate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -128,7 +136,11 @@
     <Compile Include="ICustomerRepository.cs" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202005071135336_Initial.resx">
+      <DependentUpon>202005071135336_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
