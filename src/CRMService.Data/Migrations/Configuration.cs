@@ -10,7 +10,7 @@ namespace CRMService.Data.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
-            ContextKey = "CRMService.Data.CampContext";
+            ContextKey = "CRMService.Data.DataContext";
         }
 
         protected override void Seed(DataContext ctx)

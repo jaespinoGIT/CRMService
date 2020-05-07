@@ -8,9 +8,8 @@ namespace CRMService.Data.Entities
 {
     public class UserRole
     {
-        public int UserRolesId { get; set; }
+        public int UserRoleId { get; set; }
         public User User { get; set; }
-
         public Role Role { get; set; }
     }
 }

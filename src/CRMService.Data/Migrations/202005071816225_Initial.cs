@@ -46,6 +46,20 @@
                 .PrimaryKey(t => t.UserId);
             
             CreateTable(
+                "dbo.UserRoles",
+                c => new
+                    {
+                        UserRoleId = c.Int(nullable: false, identity: true),
+                        Role_RoleId = c.Int(),
+                        User_UserId = c.Int(),
+                    })
+                .PrimaryKey(t => t.UserRoleId)
+                .ForeignKey("dbo.Roles", t => t.Role_RoleId)
+                .ForeignKey("dbo.Users", t => t.User_UserId)
+                .Index(t => t.Role_RoleId)
+                .Index(t => t.User_UserId);
+            
+            CreateTable(
                 "dbo.Roles",
                 c => new
                     {
@@ -54,34 +68,20 @@
                     })
                 .PrimaryKey(t => t.RoleId);
             
-            CreateTable(
-                "dbo.UserRoles",
-                c => new
-                    {
-                        UserRolesId = c.Int(nullable: false, identity: true),
-                        Role_RoleId = c.Int(),
-                        User_UserId = c.Int(),
-                    })
-                .PrimaryKey(t => t.UserRolesId)
-                .ForeignKey("dbo.Roles", t => t.Role_RoleId)
-                .ForeignKey("dbo.Users", t => t.User_UserId)
-                .Index(t => t.Role_RoleId)
-                .Index(t => t.User_UserId);
-            
         }
         
         public override void Down()
         {
+            DropForeignKey("dbo.CustomerAudits", "User_UserId", "dbo.Users");
             DropForeignKey("dbo.UserRoles", "User_UserId", "dbo.Users");
             DropForeignKey("dbo.UserRoles", "Role_RoleId", "dbo.Roles");
-            DropForeignKey("dbo.CustomerAudits", "User_UserId", "dbo.Users");
             DropForeignKey("dbo.CustomerAudits", "Customer_CustomerId", "dbo.Customers");
             DropIndex("dbo.UserRoles", new[] { "User_UserId" });
             DropIndex("dbo.UserRoles", new[] { "Role_RoleId" });
             DropIndex("dbo.CustomerAudits", new[] { "User_UserId" });
             DropIndex("dbo.CustomerAudits", new[] { "Customer_CustomerId" });
-            DropTable("dbo.UserRoles");
             DropTable("dbo.Roles");
+            DropTable("dbo.UserRoles");
             DropTable("dbo.Users");
             DropTable("dbo.Customers");
             DropTable("dbo.CustomerAudits");

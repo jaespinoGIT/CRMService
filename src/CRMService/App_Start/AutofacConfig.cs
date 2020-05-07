@@ -11,7 +11,7 @@ using AutoMapper;
 using CRMService.Data;
 using CRMService.Models;
 
-namespace CRMService.App_Start
+namespace CRMService
 {
     public class AutofacConfig
     {
@@ -46,8 +46,8 @@ namespace CRMService.App_Start
               .InstancePerRequest();
 
             bldr.RegisterType<UserRepository>()
-       .As<IUserRepository>()
-       .InstancePerRequest();
+               .As<IUserRepository>()
+               .InstancePerRequest();
         }
     }
 }

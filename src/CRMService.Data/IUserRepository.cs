@@ -19,8 +19,8 @@ namespace CRMService.Data
         // Users
         void AddUser(User user);
         void DeleteUser(User user);
-        Task<List<User>> GetAllUsersAsync();
-        Task<User> GetUserAsync(int userId);
+        Task<List<User>> GetAllUsersAsync(bool includeUserRoles = false);
+        Task<User> GetUserAsync(int userId, bool includeUserRoles = true);
 
 
         // UserRole

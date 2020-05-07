@@ -116,9 +116,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataContext.cs" />
-    <Compile Include="Migrations\202005071135336_Initial.cs" />
-    <Compile Include="Migrations\202005071135336_Initial.designer.cs">
-      <DependentUpon>202005071135336_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\202005071816225_Initial.cs" />
+    <Compile Include="Migrations\202005071816225_Initial.designer.cs">
+      <DependentUpon>202005071816225_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="UserRepository.cs" />
     <Compile Include="Entities\CustomerAudit.cs" />
@@ -137,8 +137,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202005071135336_Initial.resx">
-      <DependentUpon>202005071135336_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202005071816225_Initial.resx">
+      <DependentUpon>202005071816225_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

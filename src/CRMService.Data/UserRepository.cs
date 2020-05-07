@@ -70,20 +70,35 @@ namespace CRMService.Data
             return (await _context.SaveChangesAsync()) > 0;
         }
 
-        public async Task<List<User>> GetAllUsersAsync()
+        public async Task<List<User>> GetAllUsersAsync(bool includeUserRoles = false)
         {
             IQueryable<User> query = _context.Users;
 
+            if (includeUserRoles)
+            {
+                query = query
+                  .Include(c => c.UserRoles);
+            }
+
             // Order It
-            query = query.OrderByDescending(c => c.Name);
+            //query = query.OrderByDescending(c => c.Name);
 
             return await query.ToListAsync();
 
         }
 
-        public async Task<User> GetUserAsync(int userId)
+        public async Task<User> GetUserAsync(int userId, bool includeUserRoles = false)
         {
-            return await _context.Users.FirstOrDefaultAsync(c => c.UserId == userId);
+            IQueryable<User> query = _context.Users;
+            //Add user roles
+            if (includeUserRoles)           
+                query = query.Include(c => c.UserRoles);           
+
+            // Query It
+            query = query.Where(c => c.UserId == userId);
+
+            return await query.FirstOrDefaultAsync();
+            
         }
 
         public async Task<Role> GetRoleByUserIdAsync(int userId, int roleId)
