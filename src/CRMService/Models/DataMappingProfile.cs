@@ -5,7 +5,7 @@ using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
-using CRMService.Data.Entities;
+using CRMService.Infrastructure.Data.EntityFramework.Entities;
 
 namespace CRMService.Models
 {

@@ -8,8 +8,8 @@
     <ProjectGuid>{B3531316-78BA-4325-8DED-4DC1472C84C3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CRMService.Data</RootNamespace>
-    <AssemblyName>CRMService.Data</AssemblyName>
+    <RootNamespace>CRMService.Infrastructure</RootNamespace>
+    <AssemblyName>CRMService.Infrastructure</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -115,25 +115,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\DataContext.cs" />
+    <Compile Include="Data\EntityFramework\DataContext.cs" />
     <Compile Include="Migrations\202005071816225_Initial.cs" />
     <Compile Include="Migrations\202005071816225_Initial.designer.cs">
       <DependentUpon>202005071816225_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Repositories\UserRepository.cs" />
-    <Compile Include="Entities\CustomerAudit.cs" />
-    <Compile Include="Entities\Customer.cs" />
-    <Compile Include="Entities\Role.cs" />
-    <Compile Include="Entities\User.cs" />
-    <Compile Include="Entities\UserRole.cs" />
-    <Compile Include="Repositories\CustomerRepository.cs" />
-    <Compile Include="Repositories\IUserRepository.cs" />
+    <Compile Include="Data\EntityFramework\Repositories\UserRepository.cs" />
+    <Compile Include="Data\EntityFramework\Entities\CustomerAudit.cs" />
+    <Compile Include="Data\EntityFramework\Entities\Customer.cs" />
+    <Compile Include="Data\EntityFramework\Entities\Role.cs" />
+    <Compile Include="Data\EntityFramework\Entities\User.cs" />
+    <Compile Include="Data\EntityFramework\Entities\UserRole.cs" />
+    <Compile Include="Data\EntityFramework\Repositories\CustomerRepository.cs" />
+    <Compile Include="Data\EntityFramework\Repositories\IUserRepository.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <Compile Include="Repositories\ICustomerRepository.cs" />
+    <Compile Include="Data\EntityFramework\Repositories\ICustomerRepository.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

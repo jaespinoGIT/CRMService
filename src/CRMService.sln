@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRMService", "CRMService\CR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRMService.Tests", "CRMService.Tests\CRMService.Tests.csproj", "{F7425A6F-5D73-431B-9B32-85FB62032E4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRMService.Data", "CRMService.Data\CRMService.Data.csproj", "{B3531316-78BA-4325-8DED-4DC1472C84C3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRMService.Infrastructure", "CRMService.Data\CRMService.Infrastructure.csproj", "{B3531316-78BA-4325-8DED-4DC1472C84C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

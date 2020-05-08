@@ -8,7 +8,8 @@ using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
 using AutoMapper;
-using CRMService.Data;
+using CRMService.Infrastructure.Data.EntityFramework;
+using CRMService.Infrastructure.Data.EntityFramework.Repositories;
 using CRMService.Models;
 
 namespace CRMService

@@ -1,4 +1,4 @@
-﻿using CRMService.Data.Entities;
+﻿using CRMService.Infrastructure.Data.EntityFramework.Entities;
 using CRMService.Data.Migrations;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CRMService.Data
+namespace CRMService.Infrastructure.Data.EntityFramework
 {
     public class DataContext : DbContext
     {

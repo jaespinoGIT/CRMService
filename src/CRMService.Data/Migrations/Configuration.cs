@@ -1,12 +1,14 @@
-﻿using CRMService.Data.Entities;
+﻿using CRMService.Infrastructure.Data.EntityFramework.Entities;
 using System;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
+using CRMService.Infrastructure.Data.EntityFramework;
+using CRMService.Infrastructure.Data;
 
 namespace CRMService.Data.Migrations
 {
-    internal sealed class Configuration : DbMigrationsConfiguration<CRMService.Data.DataContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<DataContext>
     {
         public Configuration()
         {

@@ -1,10 +1,10 @@
-﻿using CRMService.Data.Entities;
+﻿using CRMService.Infrastructure.Data.EntityFramework.Entities;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 
-namespace CRMService.Data
+namespace CRMService.Infrastructure.Data.EntityFramework.Repositories
 {
     public interface IUserRepository
     {

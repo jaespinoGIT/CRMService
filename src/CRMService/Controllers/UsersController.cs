@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using CRMService.Data;
-using CRMService.Data.Entities;
+using CRMService.Infrastructure.Data.EntityFramework.Entities;
+using CRMService.Infrastructure.Data.EntityFramework.Repositories;
 using CRMService.Models;
 using Marvin.JsonPatch;
 using Microsoft.Web.Http;

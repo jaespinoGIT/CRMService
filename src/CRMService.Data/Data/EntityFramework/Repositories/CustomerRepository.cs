@@ -1,4 +1,4 @@
-﻿using CRMService.Data.Entities;
+﻿using CRMService.Infrastructure.Data.EntityFramework.Entities;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Data.Entity;
 
-namespace CRMService.Data
+namespace CRMService.Infrastructure.Data.EntityFramework.Repositories
 {
     public class CustomerRepository : ICustomerRepository
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CRMService.Data.Entities
+namespace CRMService.Infrastructure.Data.EntityFramework.Entities
 {
     public class Customer
     {
