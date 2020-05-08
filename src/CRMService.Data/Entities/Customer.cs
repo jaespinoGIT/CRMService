@@ -9,5 +9,7 @@ namespace CRMService.Data.Entities
         public string Name { get; set; }
         public string Surname { get; set; }
         public byte[] Photo { get; set; }
+
+        public ICollection<CustomerAudit> CustomerAudits { get; set; }
     }
 }

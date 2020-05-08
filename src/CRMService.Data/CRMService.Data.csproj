@@ -115,25 +115,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataContext.cs" />
+    <Compile Include="Entities\DataContext.cs" />
     <Compile Include="Migrations\202005071816225_Initial.cs" />
     <Compile Include="Migrations\202005071816225_Initial.designer.cs">
       <DependentUpon>202005071816225_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserRepository.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Entities\CustomerAudit.cs" />
     <Compile Include="Entities\Customer.cs" />
     <Compile Include="Entities\Role.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Entities\UserRole.cs" />
-    <Compile Include="CustomerRepository.cs" />
-    <Compile Include="IUserRepository.cs" />
+    <Compile Include="Repositories\CustomerRepository.cs" />
+    <Compile Include="Repositories\IUserRepository.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <Compile Include="ICustomerRepository.cs" />
+    <Compile Include="Repositories\ICustomerRepository.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

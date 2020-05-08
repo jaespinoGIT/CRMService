@@ -65,19 +65,51 @@ namespace CRMService.Data
             return (await _context.SaveChangesAsync()) > 0;
         }
 
-        public async Task<List<Customer>> GetAllCustomersAsync()
+        public async Task<List<Customer>> GetAllCustomersAsync(bool includeCustomerAudits = false)
         {
-            IQueryable<Customer> query = _context.Customers;  
-          
+            IQueryable<Customer> query = _context.Customers;
+
+            if (includeCustomerAudits)
+            {
+                query = query.Include(c => c.CustomerAudits.Select(r => r.Customer));
+                query = query.Include(c => c.CustomerAudits.Select(r => r.User));
+            }
+
             query = query.OrderByDescending(c => c.Name);
 
             return await query.ToListAsync();
 
         }
 
-        public async Task<Customer> GetCustomerAsync(int customerId)
+        public async Task<Customer> GetCustomerAsync(int customerId, bool includeCustomerAudits = false)
         {
-            return await _context.Customers.FirstOrDefaultAsync(c => c.CustomerId == customerId);
+            IQueryable<Customer> query = _context.Customers
+                 .Where(t => t.CustomerId == customerId);
+
+            if (includeCustomerAudits)
+            {
+                query = query.Include(c => c.CustomerAudits.Select(r => r.Customer));
+                query = query.Include(c => c.CustomerAudits.Select(r => r.User));
+            }  
+
+            return await query.FirstOrDefaultAsync();            
+        }
+
+        public async Task<Customer> GetCustomerByNameAsync(string name, bool includeCustomerAudits = false)
+        {
+            IQueryable<Customer> query = _context.Customers;
+            //Add user audits
+            if (includeCustomerAudits)
+            {
+                query = query.Include(c => c.CustomerAudits.Select(r => r.Customer));
+                query = query.Include(c => c.CustomerAudits.Select(r => r.User));
+            }
+
+            // Query It
+            query = query.Where(c => c.Name == name);
+
+            return await query.FirstOrDefaultAsync();
+
         }
 
         public async Task<List<CustomerAudit>> GetCustomerAuditByUserIdAsync(int customerId)

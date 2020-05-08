@@ -76,8 +76,8 @@ namespace CRMService.Data
 
             if (includeUserRoles)
             {
-                query = query
-                  .Include(c => c.UserRoles);
+                query = query.Include(c => c.UserRoles.Select(r => r.Role));
+                query = query.Include(c => c.UserRoles.Select(r => r.User));
             }
 
             // Order It
@@ -91,14 +91,34 @@ namespace CRMService.Data
         {
             IQueryable<User> query = _context.Users;
             //Add user roles
-            if (includeUserRoles)           
-                query = query.Include(c => c.UserRoles);           
-
+            if (includeUserRoles)
+            {
+                query = query.Include(c => c.UserRoles.Select(r => r.Role));
+                query = query.Include(c => c.UserRoles.Select(r => r.User));
+            }
+            
             // Query It
             query = query.Where(c => c.UserId == userId);
 
             return await query.FirstOrDefaultAsync();
             
+        }
+
+        public async Task<User> GetUserByNameAsync(string name, bool includeUserRoles = false)
+        {
+            IQueryable<User> query = _context.Users;
+            //Add user roles
+            if (includeUserRoles)
+            {
+                query = query.Include(c => c.UserRoles.Select(r => r.Role));
+                query = query.Include(c => c.UserRoles.Select(r => r.User));
+            }
+
+            // Query It
+            query = query.Where(c => c.Name == name);
+
+            return await query.FirstOrDefaultAsync();
+
         }
 
         public async Task<Role> GetRoleByUserIdAsync(int userId, int roleId)

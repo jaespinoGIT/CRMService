@@ -18,8 +18,9 @@ namespace CRMService.Data
         // Customers
         void AddCustomer(Customer customer);
         void DeleteCustomer(Customer customer);
-        Task<List<Customer>> GetAllCustomersAsync();
-        Task<Customer> GetCustomerAsync(int customerId);
+        Task<List<Customer>> GetAllCustomersAsync(bool includeCustomerAudits = false);
+        Task<Customer> GetCustomerAsync(int customerId, bool includeCustomerAudits = false);
+        Task<Customer> GetCustomerByNameAsync(string name, bool includeCustomerAudits = false);
 
         // Customers audit
         void AddCustomerAudit(CustomerAudit customerAudit);

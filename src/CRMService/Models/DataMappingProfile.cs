@@ -20,7 +20,9 @@ namespace CRMService.Models
                     .ReverseMap();
 
             CreateMap<Role, RoleModel>();
-           
+
+            CreateMap<UserRole, UserRoleModel>()
+                .ReverseMap();
         }
     }
 }

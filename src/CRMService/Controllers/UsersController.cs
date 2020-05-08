@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using CRMService.Data;
+using CRMService.Data.Entities;
 using CRMService.Models;
+using Marvin.JsonPatch;
 using Microsoft.Web.Http;
 using System;
 using System.Collections.Generic;
@@ -66,11 +68,46 @@ namespace CRMService.Controllers
             }
         }
 
+        [Route()]
+        public async Task<IHttpActionResult> Post(UserModel model)
+        {
+            try
+            {
+                if (await _userRepository.GetUserByNameAsync(model.Name) != null)
+                {
+                    ModelState.AddModelError("Name", "Name in use");
+                }
+
+                if (ModelState.IsValid)
+                {
+                    var user = _mapper.Map<User>(model);
+
+                    _userRepository.AddUser(user);
+
+                    if (await _userRepository.SaveChangesAsync())
+                    {
+                        var newModel = _mapper.Map<UserModel>(user);
+
+                        return CreatedAtRoute("GetUser", new { moniker = newModel.UserId }, newModel);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+
+            return BadRequest(ModelState);
+        }
+
         [Route("{userId}")]
         public async Task<IHttpActionResult> Put(int userId, UserModel model)
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest("Not a valid model");
+
                 var user = await _userRepository.GetUserAsync(userId);
                 if (user == null) return NotFound();
 
@@ -114,6 +151,41 @@ namespace CRMService.Controllers
             {
                 return InternalServerError(ex);
             }
+        }
+        [Route("{userId}")]
+        [HttpPatch]
+        public async Task<IHttpActionResult> Patch(int userId, [FromBody] JsonPatchDocument<UserModel> patchDoc)
+        {
+            try
+            {
+                // If the received data is null
+                if (patchDoc == null)                
+                    return BadRequest();
+
+                var user = await _userRepository.GetUserAsync(userId, false);
+                if (user == null) return NotFound();
+
+                var userModelToPatch = _mapper.Map<UserModel>(user);
+              
+                patchDoc.ApplyTo(userModelToPatch);   
+
+                // Assign entity changes to original entity retrieved from database
+                _mapper.Map(userModelToPatch, user);               
+
+                if (await _userRepository.SaveChangesAsync())
+                {
+                    return Ok(_mapper.Map<UserModel>(user));
+                }
+                else
+                {
+                    return InternalServerError();
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }        
+
         }
     }
 }

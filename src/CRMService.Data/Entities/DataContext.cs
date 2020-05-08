@@ -13,7 +13,7 @@ namespace CRMService.Data
     {
         public DataContext() : base("CRMServiceConnectionString")
         {
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataContext, Configuration>());
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataContext, Configuration>());            
         }
 
         public DbSet<Customer> Customers { get; set; }     
