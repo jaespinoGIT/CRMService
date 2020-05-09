@@ -63,7 +63,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CRMService\CRMService.csproj">
+    <ProjectReference Include="..\..\src\CRMService\CRMService.csproj">
       <Project>{7008BCFD-3FD1-4197-B4EB-805449D4D8A4}</Project>
       <Name>CRMService</Name>
     </ProjectReference>

@@ -259,7 +259,7 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CRMService.Data\CRMService.Infrastructure.csproj">
+    <ProjectReference Include="..\CRMService.Infrastructure\CRMService.Infrastructure.csproj">
       <Project>{b3531316-78ba-4325-8ded-4dc1472c84c3}</Project>
       <Name>CRMService.Infrastructure</Name>
     </ProjectReference>

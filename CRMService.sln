@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRMService", "src\CRMService\CRMService.csproj", "{7008BCFD-3FD1-4197-B4EB-805449D4D8A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRMService.UnitTests", "test\CRMService.UnitTests\CRMService.UnitTests.csproj", "{F7425A6F-5D73-431B-9B32-85FB62032E4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRMService.Infrastructure", "src\CRMService.Infrastructure\CRMService.Infrastructure.csproj", "{B3531316-78BA-4325-8DED-4DC1472C84C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRMService.Core", "src\CRMService.Core\CRMService.Core.csproj", "{16A0C6DE-C4AB-495C-AA1C-48C50D506650}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6069A91A-4773-4A4E-BF2F-0F6CEFA1502F}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5AC739A2-4B23-4908-AE2C-9FDC6F706F56}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{40A74773-CD9B-44B9-9902-EB682833C887}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7008BCFD-3FD1-4197-B4EB-805449D4D8A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7008BCFD-3FD1-4197-B4EB-805449D4D8A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7008BCFD-3FD1-4197-B4EB-805449D4D8A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7008BCFD-3FD1-4197-B4EB-805449D4D8A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7425A6F-5D73-431B-9B32-85FB62032E4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7425A6F-5D73-431B-9B32-85FB62032E4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7425A6F-5D73-431B-9B32-85FB62032E4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7425A6F-5D73-431B-9B32-85FB62032E4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3531316-78BA-4325-8DED-4DC1472C84C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3531316-78BA-4325-8DED-4DC1472C84C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3531316-78BA-4325-8DED-4DC1472C84C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3531316-78BA-4325-8DED-4DC1472C84C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16A0C6DE-C4AB-495C-AA1C-48C50D506650}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16A0C6DE-C4AB-495C-AA1C-48C50D506650}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16A0C6DE-C4AB-495C-AA1C-48C50D506650}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16A0C6DE-C4AB-495C-AA1C-48C50D506650}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7008BCFD-3FD1-4197-B4EB-805449D4D8A4} = {40A74773-CD9B-44B9-9902-EB682833C887}
+		{F7425A6F-5D73-431B-9B32-85FB62032E4E} = {5AC739A2-4B23-4908-AE2C-9FDC6F706F56}
+		{B3531316-78BA-4325-8DED-4DC1472C84C3} = {40A74773-CD9B-44B9-9902-EB682833C887}
+		{16A0C6DE-C4AB-495C-AA1C-48C50D506650} = {40A74773-CD9B-44B9-9902-EB682833C887}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {43D1D8DA-A23A-4254-8EFB-47440463B5E2}
+	EndGlobalSection
+EndGlobal

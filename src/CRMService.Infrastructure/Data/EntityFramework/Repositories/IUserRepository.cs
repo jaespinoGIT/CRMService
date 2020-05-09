@@ -21,7 +21,7 @@ namespace CRMService.Infrastructure.Data.EntityFramework.Repositories
         void DeleteUser(User user);
         Task<List<User>> GetAllUsersAsync(bool includeUserRoles = false);
         Task<User> GetUserAsync(int userId, bool includeUserRoles = true);
-        Task<User> GetUserByNameAsync(string name, bool includeUserRoles = true);
+        Task<User> GetUserByLoginAsync(string login, bool includeUserRoles = true);
 
         // UserRole
         void AddUserRole(UserRole userRole);

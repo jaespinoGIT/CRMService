@@ -73,9 +73,9 @@ namespace CRMService.Controllers
         {
             try
             {
-                if (await _userRepository.GetUserByNameAsync(model.Name) != null)
+                if (await _userRepository.GetUserByLoginAsync(model.Login) != null)
                 {
-                    ModelState.AddModelError("Name", "Name in use");
+                    ModelState.AddModelError("Login", "Login in use");
                 }
 
                 if (ModelState.IsValid)

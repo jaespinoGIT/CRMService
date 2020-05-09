@@ -104,7 +104,7 @@ namespace CRMService.Infrastructure.Data.EntityFramework.Repositories
             
         }
 
-        public async Task<User> GetUserByNameAsync(string name, bool includeUserRoles = false)
+        public async Task<User> GetUserByLoginAsync(string login, bool includeUserRoles = false)
         {
             IQueryable<User> query = _context.Users;
             //Add user roles
@@ -115,7 +115,7 @@ namespace CRMService.Infrastructure.Data.EntityFramework.Repositories
             }
 
             // Query It
-            query = query.Where(c => c.Name == name);
+            query = query.Where(c => c.Login == login);
 
             return await query.FirstOrDefaultAsync();
 
