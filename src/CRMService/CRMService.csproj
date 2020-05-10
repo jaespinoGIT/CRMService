@@ -237,7 +237,7 @@
     <Compile Include="Helpers\ApiResponse.cs" />
     <Compile Include="Models\CustomerAuditModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
-    <Compile Include="Models\DataMappingProfile.cs" />
+    <Compile Include="Models\Helpers\EntitiesMappingProfile.cs" />
     <Compile Include="Models\UploadCustomerPhotoModel.cs" />
     <Compile Include="Models\UserRoleModel.cs" />
     <Compile Include="Models\RoleModel.cs" />

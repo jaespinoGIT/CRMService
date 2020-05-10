@@ -9,9 +9,9 @@ using CRMService.Core.Domain.Entities;
 
 namespace CRMService.Models
 {
-    public class DataMappingProfile : Profile
+    public class EntitiesMappingProfile : Profile
     {
-        public DataMappingProfile()
+        public EntitiesMappingProfile()
         {
             CreateMap<User, UserModel>()
                 .ReverseMap();

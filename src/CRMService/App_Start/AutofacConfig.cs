@@ -1,21 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Http;
-using Autofac;
+﻿using Autofac;
 using Autofac.Integration.WebApi;
 using AutoMapper;
 using CRMService.Core;
-using CRMService.Core.Repositories;
-using CRMService.Core.Services;
-using CRMService.Core.Services.Interfaces;
 using CRMService.Infrastructure;
-using CRMService.Infrastructure.Data.EntityFramework;
-using CRMService.Infrastructure.Data.EntityFramework.Repositories;
 using CRMService.Models;
+using System.Reflection;
+using System.Web.Http;
 
 namespace CRMService
 {
@@ -37,7 +27,7 @@ namespace CRMService
         {
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.AddProfile(new DataMappingProfile());
+                cfg.AddProfile(new EntitiesMappingProfile());
             });                       
 
             bldr.RegisterInstance(config.CreateMapper())
