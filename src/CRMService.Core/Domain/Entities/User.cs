@@ -13,6 +13,6 @@ namespace CRMService.Core.Domain.Entities
         public string Login { get; set; }
         public bool Active { get; set; }
 
-        public ICollection<UserRole> UserRoles { get; set; }
+        public virtual ICollection<UserRole> UserRoles { get; set; }
     }
 }

@@ -14,6 +14,8 @@ namespace CRMService
             // Web API configuration and services           
             AutofacConfig.Register();
 
+           
+
             config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling
                 = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 

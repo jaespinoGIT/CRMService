@@ -1,4 +1,4 @@
-﻿using CRMService.Infrastructure.Data.EntityFramework.Entities;
+﻿using CRMService.Core.Domain.Entities;
 using CRMService.Data.Migrations;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,9 @@ namespace CRMService.Infrastructure.Data.EntityFramework
     {
         public DataContext() : base("CRMServiceConnectionString")
         {
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataContext, Configuration>());            
+#if DEBUG
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataContext, Configuration>());
+#endif
         }
 
         public DbSet<Customer> Customers { get; set; }     

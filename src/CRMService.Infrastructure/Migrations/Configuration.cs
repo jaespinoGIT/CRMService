@@ -1,10 +1,10 @@
-﻿using CRMService.Infrastructure.Data.EntityFramework.Entities;
-using System;
+﻿using System;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using CRMService.Infrastructure.Data.EntityFramework;
 using CRMService.Infrastructure.Data;
+using CRMService.Core.Domain.Entities;
 
 namespace CRMService.Data.Migrations
 {
@@ -13,13 +13,18 @@ namespace CRMService.Data.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
-            ContextKey = "CRMService.Data.DataContext";
+            ContextKey = "CRMService.Infrastructure.DataContext";
         }
 
         protected override void Seed(DataContext ctx)
         {
             if (!ctx.Users.Any())
             {
+                Role role = new Role()
+                { RoleName = "User" };
+
+                ctx.Roles.Add(role);
+
                 User user = new User()
                 {                   
                     Name = "Admin1 Surname1",

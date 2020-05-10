@@ -14,5 +14,6 @@ namespace CRMService.Models
         [Required]
         [StringLength(50, MinimumLength = 3)]
         public string RoleName { get; set; }
+        public bool RoleIsAdmin { get; set; }
     }
 }

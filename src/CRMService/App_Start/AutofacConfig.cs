@@ -8,6 +8,11 @@ using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
 using AutoMapper;
+using CRMService.Core;
+using CRMService.Core.Repositories;
+using CRMService.Core.Services;
+using CRMService.Core.Services.Interfaces;
+using CRMService.Infrastructure;
 using CRMService.Infrastructure.Data.EntityFramework;
 using CRMService.Infrastructure.Data.EntityFramework.Repositories;
 using CRMService.Models;
@@ -33,22 +38,15 @@ namespace CRMService
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new DataMappingProfile());
-            });
+            });                       
 
             bldr.RegisterInstance(config.CreateMapper())
             .As<IMapper>()
             .SingleInstance();
 
-            bldr.RegisterType<DataContext>()
-              .InstancePerRequest();
+            bldr.RegisterModule(new CoreModule());
+            bldr.RegisterModule(new InfrastructureModule());      
 
-            bldr.RegisterType<CustomerRepository>()
-              .As<ICustomerRepository>()
-              .InstancePerRequest();
-
-            bldr.RegisterType<UserRepository>()
-               .As<IUserRepository>()
-               .InstancePerRequest();
         }
     }
 }

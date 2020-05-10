@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=5.1.4.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Autofac.5.1.4\lib\net461\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -89,6 +92,7 @@
     <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ComponentModel.Annotations.4.7.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -116,29 +120,30 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\EntityFramework\DataContext.cs" />
-    <Compile Include="Migrations\202005071816225_Initial.cs" />
-    <Compile Include="Migrations\202005071816225_Initial.designer.cs">
-      <DependentUpon>202005071816225_Initial.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Data\EntityFramework\Repositories\RoleRepository.cs" />
+    <Compile Include="InfrastructureModule.cs" />
     <Compile Include="Data\EntityFramework\Repositories\UserRepository.cs" />
-    <Compile Include="Data\EntityFramework\Entities\CustomerAudit.cs" />
-    <Compile Include="Data\EntityFramework\Entities\Customer.cs" />
-    <Compile Include="Data\EntityFramework\Entities\Role.cs" />
-    <Compile Include="Data\EntityFramework\Entities\User.cs" />
-    <Compile Include="Data\EntityFramework\Entities\UserRole.cs" />
     <Compile Include="Data\EntityFramework\Repositories\CustomerRepository.cs" />
-    <Compile Include="Data\EntityFramework\Repositories\IUserRepository.cs" />
+    <Compile Include="Migrations\202005101519275_Initial.cs" />
+    <Compile Include="Migrations\202005101519275_Initial.designer.cs">
+      <DependentUpon>202005101519275_Initial.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <Compile Include="Data\EntityFramework\Repositories\ICustomerRepository.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202005071816225_Initial.resx">
-      <DependentUpon>202005071816225_Initial.cs</DependentUpon>
+    <ProjectReference Include="..\CRMService.Core\CRMService.Core.csproj">
+      <Project>{16a0c6de-c4ab-495c-aa1c-48c50d506650}</Project>
+      <Name>CRMService.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202005101519275_Initial.resx">
+      <DependentUpon>202005101519275_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

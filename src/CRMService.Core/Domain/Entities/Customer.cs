@@ -11,5 +11,6 @@ namespace CRMService.Core.Domain.Entities
         public byte[] Photo { get; set; }
 
         public ICollection<CustomerAudit> CustomerAudits { get; set; }
+              
     }
 }

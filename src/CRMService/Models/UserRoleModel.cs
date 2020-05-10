@@ -9,9 +9,11 @@ namespace CRMService.Models
 {
     public class UserRoleModel
     {     
-        [Required]
+      
         public RoleModel Role { get; set; }
-        [Required]
+       
         public UserModel User { get; set; }
+       
+        public int UserId { get; set; }
     }
 }

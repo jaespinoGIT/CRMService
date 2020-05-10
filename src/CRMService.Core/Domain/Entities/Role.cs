@@ -10,5 +10,6 @@ namespace CRMService.Core.Domain.Entities
     {
         public int RoleId { get; set; }
         public string RoleName { get; set; }
+        public bool RoleIsAdmin { get; set; }
     }
 }

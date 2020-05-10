@@ -1,4 +1,4 @@
-﻿using CRMService.Models.Enums;
+﻿using CRMService.Core.Domain.Entities.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

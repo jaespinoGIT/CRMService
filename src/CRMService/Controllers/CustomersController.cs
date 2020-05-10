@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
-using CRMService.Data;
-using CRMService.Infrastructure.Data.EntityFramework.Entities;
+using CRMService.Core.Domain.Entities;
+using CRMService.Core.Services.Interfaces;
+
 using CRMService.Infrastructure.Data.EntityFramework.Repositories;
 using CRMService.Models;
 using Marvin.JsonPatch;
@@ -15,19 +16,21 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Serilog;
+using CRMService.Helpers;
 
 namespace CRMService.Controllers
 {
     [ApiVersion("1.0")]
     [RoutePrefix("api/customers")]
     public class CustomersController : ApiController
-    {
-        private readonly ICustomerRepository _customerRepository;
+    {   
         private readonly IMapper _mapper;
+        private readonly ICustomerService _customerService;
 
-        public CustomersController(ICustomerRepository repository, IMapper mapper)
+        public CustomersController(ICustomerService customerService, IMapper mapper)
         {
-            _customerRepository = repository;
+            _customerService = customerService;
             _mapper = mapper;
         }
 
@@ -36,7 +39,7 @@ namespace CRMService.Controllers
         {
             try
             {
-                var result = await _customerRepository.GetAllCustomersAsync(includeCustomerAudits);
+                var result = await _customerService.GetAllCustomersAsync(includeCustomerAudits);
 
                 if (result == null)
                     return NotFound();
@@ -45,19 +48,21 @@ namespace CRMService.Controllers
 
                 return Ok(mappedResult);
             }
-            catch
+            catch 
             {
+                //Log.Error(response.ErrorMessage.Title);
+                //Log.Error(response.ErrorMessage.Message);
+
                 return InternalServerError();
             }
         }
 
-
         [Route("{customerId}", Name = "GetCustomer")]
-        public async Task<IHttpActionResult> Get(int customerId, bool includeCustomerAudits = false)
+        public async Task<IHttpActionResult> Get(int customerId, bool full = false)
         {
             try
             {
-                var result = await _customerRepository.GetCustomerAsync(customerId, includeCustomerAudits);
+                var result = await _customerService.GetCustomerAsync(customerId, full);
 
                 if (result == null)
                     return NotFound();
@@ -78,23 +83,21 @@ namespace CRMService.Controllers
         {
             try
             {
-                if (await _customerRepository.GetCustomerByNameAsync(model.Name) != null)
+                if (!ModelState.IsValid)
                 {
-                    ModelState.AddModelError("Name", "Name in use");
+                   return BadRequest();
                 }
-
-                if (ModelState.IsValid)
+                else
                 {
-                    var user = _mapper.Map<Customer>(model);
+                    var customer = _mapper.Map<Customer>(model);                    
 
-                    _customerRepository.AddCustomer(user);
-
-                    if (await _customerRepository.SaveChangesAsync())
+                    if (await _customerService.AddCustomer(customer))
                     {
-                        var newModel = _mapper.Map<CustomerModel>(user);
+                        var newModel = _mapper.Map<CustomerModel>(customer);
 
-                        return CreatedAtRoute("GetCustomer", new { moniker = newModel.CustomerId }, newModel);
-                    }
+                        return CreatedAtRoute("GetCustomer", new { customerId = newModel.CustomerId }, newModel);
+                    }                  
+                   
                 }
             }
             catch (Exception ex)
@@ -110,32 +113,18 @@ namespace CRMService.Controllers
         {
             try
             {
-                var customer = await _customerRepository.GetCustomerAsync(customerId);
-                if (customer == null) return NotFound();
+                if (!ModelState.IsValid)
+                    return BadRequest("Not a valid model");
 
-                //var userId = ((ClaimsIdentity)User.Identity).FindFirst("UserId");
-                model.CustomerAudits = new CustomerAuditModel[]
-                        {
-                        new CustomerAuditModel
-                        {
-                            Date = DateTime.Now,
-                            Operation = Models.Enums.CustomerAuditOperationType.Update,                           
-                            Customer = model
-                        }
+                 var customer = _mapper.Map<Customer>(model);
 
-                        };
-
-
-                _mapper.Map(model, customer);
-
-                if (await _customerRepository.SaveChangesAsync())
-                {
-                    return Ok(_mapper.Map<CustomerModel>(customer));
-                }
-                else
-                {
-                    return InternalServerError();
-                }
+                var customerUpdated = await _customerService.UpdateCustomer(customerId, customer);
+                
+                if (customerUpdated == null)
+                    return BadRequest();
+                else 
+                    return Ok(_mapper.Map<CustomerModel>(customerUpdated));
+               
             }
             catch (Exception ex)
             {
@@ -148,19 +137,10 @@ namespace CRMService.Controllers
         {
             try
             {
-                var Customer = await _customerRepository.GetCustomerAsync(customerId);
-                if (Customer == null) return NotFound();
-
-                _customerRepository.DeleteCustomer(Customer);
-
-                if (await _customerRepository.SaveChangesAsync())
-                {
+                if (await _customerService.DeleteCustomer(customerId))
                     return Ok();
-                }
                 else
-                {
-                    return InternalServerError();
-                }
+                    return BadRequest();
             }
             catch (Exception ex)
             {
@@ -186,14 +166,15 @@ namespace CRMService.Controllers
             }
 
             byte[] payload = await fileContents.ReadAsByteArrayAsync();        
-            var customer = await _customerRepository.GetCustomerAsync(customerId, false);
+            var customer = await _customerService.GetCustomerAsync(customerId);
             if (customer == null) return NotFound();         
 
-            customer.Photo = payload;          
+            customer.Photo = payload;
 
-            if (await _customerRepository.SaveChangesAsync())
+            var customerUpdated = await _customerService.UpdateCustomer(customerId, customer);
+            if (customerUpdated != null)
             {
-                return Ok(_mapper.Map<CustomerModel>(customer));
+                return Ok(_mapper.Map<CustomerModel>(customerUpdated));
             }
             else
             {
@@ -239,7 +220,7 @@ namespace CRMService.Controllers
         //        if (patchDoc == null)
         //            return BadRequest();
 
-        //        var customer = await _customerRepository.GetCustomerAsync(customerId, false);
+        //        var customer = await _customerService.GetCustomerAsync(customerId, false);
         //        if (customer == null) return NotFound();
 
         //        var customerModelToPatch = _mapper.Map<CustomerModel>(customer);
@@ -249,7 +230,7 @@ namespace CRMService.Controllers
         //        // Assign entity changes to original entity retrieved from database
         //        _mapper.Map(customerModelToPatch, customer);
 
-        //        if (await _customerRepository.SaveChangesAsync())
+        //        if (await _customerService.SaveChangesAsync())
         //        {
         //            return Ok(_mapper.Map<CustomerModel>(customer));
         //        }

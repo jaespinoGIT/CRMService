@@ -150,6 +150,9 @@
     <Reference Include="Microsoft.Net.Http.Headers, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Net.Http.Headers.2.2.0\lib\netstandard2.0\Microsoft.Net.Http.Headers.dll</HintPath>
     </Reference>
+    <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Serilog.2.9.0\lib\net46\Serilog.dll</HintPath>
+    </Reference>
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.5.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
     </Reference>
@@ -231,10 +234,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\ApiResponse.cs" />
     <Compile Include="Models\CustomerAuditModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
     <Compile Include="Models\DataMappingProfile.cs" />
-    <Compile Include="Models\Enums\CustomerAuditOperationType.cs" />
     <Compile Include="Models\UploadCustomerPhotoModel.cs" />
     <Compile Include="Models\UserRoleModel.cs" />
     <Compile Include="Models\RoleModel.cs" />
@@ -259,6 +262,10 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CRMService.Core\CRMService.Core.csproj">
+      <Project>{16a0c6de-c4ab-495c-aa1c-48c50d506650}</Project>
+      <Name>CRMService.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CRMService.Infrastructure\CRMService.Infrastructure.csproj">
       <Project>{b3531316-78ba-4325-8ded-4dc1472c84c3}</Project>
       <Name>CRMService.Infrastructure</Name>
