@@ -22,7 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{40A74773-CD9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRMService.Core.UnitTests", "test\CRMService.Core.UnitTests\CRMService.Core.UnitTests.csproj", "{31071C26-1BBD-4CAC-B836-AA7B050E9552}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRMService.UnitTests", "CRMService.UnitTests\CRMService.UnitTests.csproj", "{01E1C240-5305-424B-B41A-766DB3CF93EE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRMService.UnitTests", "test\CRMService.UnitTests\CRMService.UnitTests.csproj", "{01E1C240-5305-424B-B41A-766DB3CF93EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

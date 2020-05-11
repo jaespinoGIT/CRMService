@@ -21,9 +21,7 @@ namespace CRMService.UnitTests.Controllers
     {
         [TestMethod]
         public async Task GetAllCustomers()
-        {
-            try
-            {
+        {           
                 var mockMapper = new MapperConfiguration(cfg =>
                 {
                     cfg.AddProfile(new EntitiesMappingProfile());
@@ -51,13 +49,8 @@ namespace CRMService.UnitTests.Controllers
 
                 var contentResult = httpActionResult as OkNegotiatedContentResult<IEnumerable<CustomerModel>>;
 
-                Assert.AreEqual(customers.Count(), contentResult.Content.Count());                              
-            }
-            catch (Exception ex)
-            {
-                //Assert
-                Assert.IsFalse(false, ex.Message);
-            }
+                Assert.AreEqual(customers.Count(), contentResult.Content.Count());                             
+         
         }
     }
 }

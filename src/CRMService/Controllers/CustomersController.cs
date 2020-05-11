@@ -85,7 +85,7 @@ namespace CRMService.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                   return BadRequest();
+                   return BadRequest(ModelState);
                 }
                 else
                 {
