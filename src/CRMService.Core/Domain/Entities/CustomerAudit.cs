@@ -9,7 +9,7 @@ namespace CRMService.Core.Domain.Entities
         public int CustomerAuditId { get; set; }
         public DateTime Date { get; set; }
         public CustomerAuditOperationType Operation { get; set; }      
-        public User User { get; set; }
-        public Customer Customer { get; set; }
+        public virtual User User { get; set; }
+        public virtual Customer Customer { get; set; }
     }
 }

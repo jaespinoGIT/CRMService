@@ -18,7 +18,7 @@ namespace CRMService.Controllers
     [ApiVersion("1.0")]
     [RoutePrefix("api/users")]
     public class UsersController : ApiController
-    {   
+    {
         private readonly IMapper _mapper;
 
         private readonly IUserService _userService;
@@ -29,173 +29,124 @@ namespace CRMService.Controllers
             _mapper = mapper;
         }
 
-        [Route()]       
+        [Route()]
         public async Task<IHttpActionResult> Get(bool includeUserRoles = false)
         {
-            try
-            {
-                var result = await _userService.GetAllUsersAsync(includeUserRoles);
 
-                if (result == null)
-                    return NotFound();
-                // Mapping 
-                var mappedResult = _mapper.Map<IEnumerable<UserModel>>(result);
+            var result = await _userService.GetAllUsersAsync(includeUserRoles);
 
-                return Ok(mappedResult);
-            }
-            catch
-            {
-                return InternalServerError();
-            }
+            if (result == null)
+                return NotFound();
+            // Mapping 
+            var mappedResult = _mapper.Map<IEnumerable<UserModel>>(result);
+
+            return Ok(mappedResult);
+
         }
 
-      
+
         [Route("{userId}", Name = "GetUser")]
         public async Task<IHttpActionResult> Get(int userId, bool includeUserRoles = true)
         {
-            try
-            {
-                var result = await _userService.GetUserAsync(userId, includeUserRoles);
 
-                if (result == null)
-                    return NotFound();
+            var result = await _userService.GetUserAsync(userId, includeUserRoles);
 
-                var mappedResult = _mapper.Map<UserModel>(result);
+            if (result == null)
+                return NotFound();
 
-                return Ok(mappedResult);
-            }
-            catch
-            {
-                return InternalServerError();
-            }
+            var mappedResult = _mapper.Map<UserModel>(result);
+
+            return Ok(mappedResult);
+
         }
 
         [Route()]
         public async Task<IHttpActionResult> Post(UserModel model, bool userIsAdmin = false)
         {
-            try
+
+            if (!ModelState.IsValid)
             {
-                if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                var user = await _userService.AddUser(_mapper.Map<User>(model), userIsAdmin);
+                if (user != null)
                 {
-                    return BadRequest();
+                    var newModel = _mapper.Map<UserModel>(user);
+
+                    return CreatedAtRoute("GetUser", new { userId = newModel.UserId }, newModel);
                 }
-                else
-                {
-                    var user = _mapper.Map<User>(model);
-
-                    if (await _userService.AddUser(user, userIsAdmin))
-                    {
-                        var newModel = _mapper.Map<UserModel>(user);
-
-                        return CreatedAtRoute("GetUser", new { userId = newModel.UserId }, newModel);
-                    }
-                }                
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
             }
 
-            return BadRequest(ModelState);
+            return BadRequest();
         }
 
-        [Route("{userId}")]
+        [Route("{userId}")]       
         public async Task<IHttpActionResult> Put(int userId, UserModel model)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                    return BadRequest("Not a valid model");
+            var user = await _userService.GetUserAsync(userId, true);
 
-                var user = _mapper.Map<User>(model);
+            _mapper.Map(model, user);
 
-                var userUpdated = await _userService.UpdateUser(userId, user);
+            var userUpdated = await _userService.UpdateUser(user);
 
-                if (userUpdated == null)
-                    return InternalServerError();
-                else
-                    return Ok(_mapper.Map<CustomerModel>(userUpdated));             
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
+            if (userUpdated == null)
+                return InternalServerError();
+            else
+                return Ok(_mapper.Map<UserModel>(userUpdated));
+
         }
 
         [Route("{userId}")]
         public async Task<IHttpActionResult> Delete(int userId)
         {
-            try
-            {
-                if (await _userService.DeleteUser(userId))
-                    return Ok();
-                else
-                    return BadRequest();            
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
+
+            if (await _userService.DeleteUser(userId))
+                return Ok();
+            else
+                return BadRequest();
+
         }
-        [Route("{userId}")]       
+        [Route("{userId}")]
         public async Task<IHttpActionResult> Patch(int userId, [FromBody] JsonPatchDocument<UserModel> patchDoc)
         {
-            try
-            {
-                // If the received data is null
-                if (patchDoc == null)                
-                    return BadRequest();
 
-                var user = await _userService.GetUserAsync(userId, false);
-                if (user == null) return NotFound();
+            // If the received data is null
+            if (patchDoc == null)
+                return BadRequest();
 
-                var userModelToPatch = _mapper.Map<UserModel>(user);
-              
-                patchDoc.ApplyTo(userModelToPatch);   
+            var user = await _userService.GetUserAsync(userId, false);
+            if (user == null) return NotFound();
 
-                // Assign entity changes to original entity retrieved from database
-                _mapper.Map(userModelToPatch, user);
+            var userModelToPatch = _mapper.Map<UserModel>(user);
 
-                var userUpdated = await _userService.UpdateUser(userId, user);
+            patchDoc.ApplyTo(userModelToPatch);
 
-                if (userUpdated == null)
-                    return InternalServerError();
-                else
-                    return Ok(_mapper.Map<CustomerModel>(userUpdated));             
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            } 
+            // Assign entity changes to original entity retrieved from database
+            _mapper.Map(userModelToPatch, user);
+
+            var userUpdated = await _userService.UpdateUser(user);
+
+            if (userUpdated == null)
+                return InternalServerError();
+            else
+                return Ok(_mapper.Map<UserModel>(userUpdated));
+
         }
 
-        [Route("{userId}")]
-        [HttpPatch]
-        public async Task<IHttpActionResult> ChangeAdminStatus(int userId, bool newAdminStatus = false)
+        [HttpPut]
+        [Route("{userId}/changeadminstatus")]        
+        public async Task<IHttpActionResult> ChangeAdminStatus(int userId, bool newAdminStatus = true)
         {
-            try
-            {            
 
-                var user = await _userService.GetUserAsync(userId, false);
-                if (user == null) return NotFound();
+            var userUpdated = await _userService.ChangeAdminStatus(userId, newAdminStatus);
 
-                var userModelToPatch = _mapper.Map<UserModel>(user);
+            if (userUpdated == null)
+                return InternalServerError();
+            else
+                return Ok(_mapper.Map<UserModel>(userUpdated));
 
-
-                // Assign entity changes to original entity retrieved from database
-                _mapper.Map(userModelToPatch, user);
-
-                var userUpdated = await _userService.UpdateUser(userId, user);
-
-                if (userUpdated == null)
-                    return InternalServerError();
-                else
-                    return Ok(_mapper.Map<CustomerModel>(userUpdated));
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
         }
     }
 }

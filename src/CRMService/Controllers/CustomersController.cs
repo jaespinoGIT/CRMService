@@ -18,13 +18,16 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Serilog;
 using CRMService.Helpers;
+using System.ComponentModel;
+using CRMService.Helpers.Filters;
+using CRMService.Core.Exceptions.Services;
 
 namespace CRMService.Controllers
 {
     [ApiVersion("1.0")]
     [RoutePrefix("api/customers")]
     public class CustomersController : ApiController
-    {   
+    {
         private readonly IMapper _mapper;
         private readonly ICustomerService _customerService;
 
@@ -37,213 +40,155 @@ namespace CRMService.Controllers
         [Route()]
         public async Task<IHttpActionResult> Get(bool includeCustomerAudits = false)
         {
-            try
-            {
-                var result = await _customerService.GetAllCustomersAsync(includeCustomerAudits);
 
-                if (result == null)
-                    return NotFound();
-                // Mapping 
-                var mappedResult = _mapper.Map<IEnumerable<CustomerModel>>(result);
+            var result = await _customerService.GetAllCustomersAsync(includeCustomerAudits);
 
-                return Ok(mappedResult);
-            }
-            catch 
-            {
-                //Log.Error(response.ErrorMessage.Title);
-                //Log.Error(response.ErrorMessage.Message);
+            if (result == null)
+                return NotFound();
+            // Mapping 
+            var mappedResult = _mapper.Map<IEnumerable<CustomerModel>>(result);
 
-                return InternalServerError();
-            }
+            return Ok(mappedResult);
+
         }
 
         [Route("{customerId}", Name = "GetCustomer")]
         public async Task<IHttpActionResult> Get(int customerId, bool full = false)
         {
-            try
-            {
-                var result = await _customerService.GetCustomerAsync(customerId, full);
 
-                if (result == null)
-                    return NotFound();
+            var result = await _customerService.GetCustomerAsync(customerId, full);
 
-                var mappedResult = _mapper.Map<CustomerModel>(result);
+            if (result == null)
+                return NotFound();
 
-                return Ok(mappedResult);
-            }
-            catch
-            {
-                return InternalServerError();
-            }
+            var mappedResult = _mapper.Map<CustomerModel>(result);
+
+            return Ok(mappedResult);
+
         }
 
 
         [Route()]
         public async Task<IHttpActionResult> Post(CustomerModel model)
         {
-            try
+
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                   return BadRequest(ModelState);
-                }
-                else
-                {
-                    var customer = _mapper.Map<Customer>(model);                    
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                var customer = _mapper.Map<Customer>(model);
 
-                    if (await _customerService.AddCustomer(customer))
-                    {
-                        var newModel = _mapper.Map<CustomerModel>(customer);
+                customer = await _customerService.AddCustomer(customer);
 
-                        return CreatedAtRoute("GetCustomer", new { customerId = newModel.CustomerId }, newModel);
-                    }                  
-                   
+                if (customer != null)
+                {
+                    var newModel = _mapper.Map<CustomerModel>(customer);
+
+                    return CreatedAtRoute("GetCustomer", new { customerId = newModel.CustomerId }, newModel);
                 }
             }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
 
-            return BadRequest(ModelState);
+
+            return BadRequest();
         }
 
         [Route("{customerId}")]
         public async Task<IHttpActionResult> Put(int customerId, CustomerModel model)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                    return BadRequest("Not a valid model");
 
-                 var customer = _mapper.Map<Customer>(model);
+            var customer = await _customerService.GetCustomerAsync(customerId);
+            if (customer == null)
+                return NotFound();
+            _mapper.Map(model, customer);
 
-                var customerUpdated = await _customerService.UpdateCustomer(customerId, customer);
-                
-                if (customerUpdated == null)
-                    return BadRequest();
-                else 
-                    return Ok(_mapper.Map<CustomerModel>(customerUpdated));
-               
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
+            var customerUpdated = await _customerService.UpdateCustomer(customer);
+
+            if (customerUpdated == null)
+                return InternalServerError();
+            else
+                return Ok(_mapper.Map<CustomerModel>(customerUpdated));
+
         }
 
         [Route("{customerId}")]
         public async Task<IHttpActionResult> Delete(int customerId)
         {
-            try
-            {
-                if (await _customerService.DeleteCustomer(customerId))
-                    return Ok();
-                else
-                    return BadRequest();
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
+            if (await _customerService.DeleteCustomer(customerId))
+                return Ok();
+            else
+                return InternalServerError();
         }
 
+        [Route("{customerId}/photo")]
+        [HttpPut]
+        public async Task<IHttpActionResult> UploadCustomerImage(int customerId, [FromBody] UploadCustomerPhotoModel model)
+        {
+            if (model == null || model.Photo == null)
+                return BadRequest();
+
+            //When creating a stream, you need to reset the position, without it you will see that you always write files with a 0 byte length. 
+            //var imageDataStream = new System.IO.MemoryStream(model.Photo);
+            //imageDataStream.Position = 0;
+
+            var customer = await _customerService.GetCustomerAsync(customerId, false);
+            if (customer == null)
+                return NotFound();
+            customer.Photo = model.Photo;
+            var customerUpdated = await _customerService.UpdateCustomer(customer);
+            if (customerUpdated != null)
+                return Ok(_mapper.Map<CustomerModel>(customerUpdated));
+            else
+                return InternalServerError();
+        }
+
+        [Route("{customerId}/photo")]
+        [HttpPatch]
+        public async Task<IHttpActionResult> UploadCustomerPhoto(int customerId, [FromBody] JsonPatchDocument<CustomerModel> patchDoc)
+        {
+            // If the received data is null
+            if (patchDoc == null)
+                return BadRequest();
+
+            var customer = await _customerService.GetCustomerAsync(customerId, false);
+            if (customer == null)
+                return NotFound();
+            var customerModelToPatch = _mapper.Map<CustomerModel>(customer);
+
+            patchDoc.ApplyTo(customerModelToPatch);
+
+            // Assign entity changes to original entity retrieved from database   
+            var customerUpdated = await _customerService.UpdateCustomer(_mapper.Map(customerModelToPatch, customer));
+            if (customerUpdated == null)
+                return BadRequest();
+            else
+                return Ok(_mapper.Map<CustomerModel>(customerUpdated));
+        }
 
         [HttpPatch]
         [Route("{customerId}/upload")]
         public async Task<IHttpActionResult> Upload(int customerId)
         {
             if (!Request.Content.IsMimeMultipartContent())
-            {
                 return this.StatusCode(HttpStatusCode.UnsupportedMediaType);
-            }
 
             var filesProvider = await Request.Content.ReadAsMultipartAsync();
             var fileContents = filesProvider.Contents.FirstOrDefault();
             if (fileContents == null)
-            {
                 return this.BadRequest("Missing file");
-            }
 
-            byte[] payload = await fileContents.ReadAsByteArrayAsync();        
+            byte[] payload = await fileContents.ReadAsByteArrayAsync();
             var customer = await _customerService.GetCustomerAsync(customerId);
-            if (customer == null) return NotFound();         
-
+            if (customer == null)
+                return NotFound();
             customer.Photo = payload;
 
-            var customerUpdated = await _customerService.UpdateCustomer(customerId, customer);
-            if (customerUpdated != null)
-            {
-                return Ok(_mapper.Map<CustomerModel>(customerUpdated));
-            }
+            var customerUpdated = await _customerService.UpdateCustomer(customer);
+            if (customerUpdated == null)
+                return BadRequest();
             else
-            {
-                return InternalServerError();
-            }
-
-            //return this.Ok(new
-            //{
-            //    Result = "file uploaded successfully",
-            //});
+                return Ok(_mapper.Map<CustomerModel>(customerUpdated));
         }
-
-
-        [Route("{customerId}/photo")]
-        [HttpPost]        
-        public async Task<IHttpActionResult> UploadCustomerImage(int customerId, [FromBody] UploadCustomerPhotoModel model)
-        {
-            //Depending on if you want the byte array or a memory stream, you can use the below. 
-            //THIS IS NO LONGER NEEDED AS OUR MODEL NOW HAS A BYTE ARRAY
-            //var imageDataByteArray = Convert.FromBase64String(model.ImageData);
-
-            //When creating a stream, you need to reset the position, without it you will see that you always write files with a 0 byte length. 
-            var imageDataStream = new System.IO.MemoryStream(model.ImageData);
-            imageDataStream.Position = 0;
-
-            //Go and do something with the actual data.
-            //_customerImageService.Upload([...])
-
-            //For the purpose of the demo, we return a file so we can ensure it was uploaded correctly. 
-            //But otherwise you can just return a 204 etc.
-            return Ok();
-            //return File(model.ImageData, "image/png");
-        }
-
-        //[Route("{customerId}/photo")]
-        //[Consumes]
-        //[HttpPatch]
-        //public async Task<IHttpActionResult> UploadCustomerPhoto(int customerId, [FromBody] JsonPatchDocument<CustomerModel> patchDoc)
-        //{
-        //    try
-        //    {
-        //        // If the received data is null
-        //        if (patchDoc == null)
-        //            return BadRequest();
-
-        //        var customer = await _customerService.GetCustomerAsync(customerId, false);
-        //        if (customer == null) return NotFound();
-
-        //        var customerModelToPatch = _mapper.Map<CustomerModel>(customer);
-
-        //        patchDoc.ApplyTo(customerModelToPatch);
-
-        //        // Assign entity changes to original entity retrieved from database
-        //        _mapper.Map(customerModelToPatch, customer);
-
-        //        if (await _customerService.SaveChangesAsync())
-        //        {
-        //            return Ok(_mapper.Map<CustomerModel>(customer));
-        //        }
-        //        else
-        //        {
-        //            return InternalServerError();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return InternalServerError(ex);
-        //    }
-
-        //}
     }
 }

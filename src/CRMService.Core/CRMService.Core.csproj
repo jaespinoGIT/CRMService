@@ -55,15 +55,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplicationException.cs" />
     <Compile Include="CoreModule.cs" />
-    <Compile Include="CustomerNotFoundException.cs" />
     <Compile Include="Domain\Entities\Customer.cs" />
     <Compile Include="Domain\Entities\CustomerAudit.cs" />
     <Compile Include="Domain\Entities\Enums\CustomerAuditOperationType.cs" />
     <Compile Include="Domain\Entities\Role.cs" />
     <Compile Include="Domain\Entities\User.cs" />
     <Compile Include="Domain\Entities\UserRole.cs" />
+    <Compile Include="Exceptions\ItemNotFoundException.cs" />
+    <Compile Include="Exceptions\Services\CustomExceptionService.cs" />
+    <Compile Include="Exceptions\Services\ICustomExceptionService.cs" />
     <Compile Include="Repositories\IRoleRepository.cs" />
     <Compile Include="Repositories\ICustomerRepository.cs" />
     <Compile Include="Repositories\IUserRepository.cs" />

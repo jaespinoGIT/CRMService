@@ -10,7 +10,7 @@ namespace CRMService.Core.Domain.Entities
         public string Surname { get; set; }
         public byte[] Photo { get; set; }
 
-        public ICollection<CustomerAudit> CustomerAudits { get; set; }
+        public virtual ICollection<CustomerAudit> CustomerAudits { get; set; }
               
     }
 }

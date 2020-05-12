@@ -103,7 +103,7 @@ namespace CRMService.Infrastructure.Data.EntityFramework.Repositories
                     Surname = x.Surname
                 }).FirstOrDefaultAsync();
 
-                return new Customer() { CustomerId = cust.CustomerId, Name = cust.Name, Surname = cust.Surname };
+                return cust != null ? new Customer() { CustomerId = cust.CustomerId, Name = cust.Name, Surname = cust.Surname } : null ;
             }
         }
 

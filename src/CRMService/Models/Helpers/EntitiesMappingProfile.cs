@@ -14,15 +14,16 @@ namespace CRMService.Models
         public EntitiesMappingProfile()
         {
             CreateMap<User, UserModel>()
-                .ReverseMap();
+                .ReverseMap().ForMember(um => um.UserId, opt => opt.Ignore())
+                .ForMember(um => um.UserRoles, opt => opt.Ignore());
 
             CreateMap<Customer, CustomerModel>()
-                    .ReverseMap();
+                    .ReverseMap().ForMember(um => um.CustomerId, opt => opt.Ignore())
+                    .ForMember(um => um.CustomerAudits, opt => opt.Ignore());
 
             CreateMap<Role, RoleModel>();
 
-            CreateMap<UserRole, UserRoleModel>()
-                .ReverseMap();
+            CreateMap<UserRole, UserRoleModel>();
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CRMService.Serialization
+namespace CRMService.Helpers.Serialization
 {
 	public class Base64FileJsonConverter : JsonConverter
 	{
@@ -13,7 +13,6 @@ namespace CRMService.Serialization
 		{
 			return objectType == typeof(string);
 		}
-
 
 		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 		{

@@ -1,4 +1,4 @@
-﻿using CRMService.Serialization;
+﻿using CRMService.Helpers.Serialization;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,10 +9,8 @@ using System.Threading.Tasks;
 namespace CRMService.Models
 {
     public class UploadCustomerPhotoModel
-    {
-        public string Description { get; set; }
-
+    {    
         [JsonConverter(typeof(Base64FileJsonConverter))]
-        public byte[] ImageData { get; set; }
+        public byte[] Photo { get; set; }
     }
 }

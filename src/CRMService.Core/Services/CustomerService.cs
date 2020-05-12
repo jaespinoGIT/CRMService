@@ -1,5 +1,7 @@
 ﻿using CRMService.Core.Domain.Entities;
 using CRMService.Core.Domain.Entities.Enums;
+using CRMService.Core.Exceptions;
+using CRMService.Core.Exceptions.Services;
 using CRMService.Core.Repositories;
 using CRMService.Core.Services.Interfaces;
 using System;
@@ -12,18 +14,18 @@ namespace CRMService.Core.Services
 {
     public class CustomerService : ICustomerService
     {
-        private readonly ICustomerRepository _customerRepository;       
+        private readonly ICustomerRepository _customerRepository;
+        private readonly ICustomExceptionService _customExceptionService;
 
-        public CustomerService(ICustomerRepository customerRepository)                           
+        public CustomerService(ICustomerRepository customerRepository)
         {
-            _customerRepository = customerRepository;          
+            _customerRepository = customerRepository;
+            _customExceptionService = new CustomExceptionService();
         }
 
         public async Task<Customer> GetCustomerAsync(int customerId, bool full = false)
         {
-            var customer = await _customerRepository.GetCustomerAsync(customerId, full);                  
-
-            return customer;
+            return await _customerRepository.GetCustomerAsync(customerId, full); ;
         }
 
         public async Task<List<Customer>> GetAllCustomersAsync(bool includeCustomerAudits = false)
@@ -34,20 +36,20 @@ namespace CRMService.Core.Services
         public async Task<bool> DeleteCustomer(int customerId)
         {
             var customer = await _customerRepository.GetCustomerAsync(customerId);
-            if (customer == null) return false;
+            if (customer == null) _customExceptionService.ThrowItemNotFoundException("Customer doesnt exists");
 
             _customerRepository.DeleteCustomer(customer);
 
             return await _customerRepository.SaveChangesAsync();
-       
+
         }
 
-        public async Task<bool> AddCustomer(Customer customer)
-        {      
+        public async Task<Customer> AddCustomer(Customer customer)
+        {
             if (await _customerRepository.GetCustomerByNameAsync(customer.Name) != null)
             {
-                return false;
-                //ModelState.AddModelError("Name", "Name in use");   
+                _customExceptionService.ThrowInvalidOperationException("Name already exists");
+                return null;               
             }
 
             customer.CustomerAudits = new CustomerAudit[]
@@ -62,39 +64,32 @@ namespace CRMService.Core.Services
 
             _customerRepository.AddCustomer(customer);
 
-            return await _customerRepository.SaveChangesAsync();         
+            if (await _customerRepository.SaveChangesAsync())
+                return customer;
+            else
+                _customExceptionService.ThrowInvalidOperationException("Error adding customer");
+
+            return null;
         }
 
-        public async Task<Customer> UpdateCustomer(int customerId, Customer customerUpdate)
+        public async Task<Customer> UpdateCustomer(Customer customer)
         {
-
-            var customer = await _customerRepository.GetCustomerAsync(customerId);
-            if (customer == null) return null;
-
-            customerUpdate.CustomerId = customerId;
-
-            customer = customerUpdate;
-
-            //var userId = ((ClaimsIdentity)User.Identity).FindFirst("UserId");
-            customer.CustomerAudits = new CustomerAudit[]
-                    {
-                        new CustomerAudit
-                        {
-                            Date = DateTime.Now,
-                            Operation = CustomerAuditOperationType.Update,
-                            Customer = customer
-                        }
-
-                    };
+            //customer.CustomerAudits = new CustomerAudit[]
+            //        {
+            //            new CustomerAudit
+            //            {
+            //                Date = DateTime.Now,
+            //                Operation = CustomerAuditOperationType.Update,
+            //                Customer = customer
+            //            }
+            //        };            
 
             if (await _customerRepository.SaveChangesAsync())
-            {
                 return customer;
-            }
             else
-            {
-                return  null;
-            }
-        }
+                _customExceptionService.ThrowInvalidOperationException("Error updating user");
+
+            return null;
+        }   
     }
 }

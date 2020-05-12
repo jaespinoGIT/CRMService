@@ -1,9 +1,7 @@
-﻿using System;
+﻿using CRMService.Helpers.Serialization;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CRMService.Models
 {
@@ -15,9 +13,9 @@ namespace CRMService.Models
         public string Name { get; set; }
         [Required]
         [StringLength(50, MinimumLength = 2)]
-        public string Surname { get; set; }
+        public string Surname { get; set; }        
         public byte[] Photo { get; set; }
 
-        public ICollection<CustomerAuditModel> CustomerAudits { get; set; }
+        public ICollection<CustomerAuditModel> CustomerAudits { get; set; }       
     }
 }
