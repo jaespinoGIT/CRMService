@@ -1,4 +1,5 @@
 ﻿using CRMService.Core.Exceptions;
+using CRMService.Helpers.Loggers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace CRMService.Helpers
         public override void Handle(ExceptionHandlerContext context)
         {
             if (context.Exception is ArgumentNullException)
-            {
+            {   
                 var result = new HttpResponseMessage(HttpStatusCode.BadRequest)
                 {
                     Content = new StringContent(context.Exception.Message),
@@ -27,7 +28,7 @@ namespace CRMService.Helpers
                 context.Result = new ErrorMessageResult(context.Request, result);
             }
             else if (context.Exception is ItemNotFoundException)
-            {
+            {              
                 var result = new HttpResponseMessage(HttpStatusCode.NotFound)
                 {
                     Content = new StringContent(context.Exception.Message),
@@ -38,13 +39,14 @@ namespace CRMService.Helpers
             }
             else
             {
+                Logger.LogError(context.Exception.Message);
                 var result = new HttpResponseMessage(HttpStatusCode.InternalServerError)
                 {
                     Content = new StringContent(context.Exception.Message),
                     ReasonPhrase = "InternalServerError"
                 };
 
-                context.Result = new ErrorMessageResult(context.Request, result);
+                context.Result = new ErrorMessageResult(context.Request, result);               
             }
         }
 

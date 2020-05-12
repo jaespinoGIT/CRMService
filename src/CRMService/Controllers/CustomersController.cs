@@ -120,7 +120,7 @@ namespace CRMService.Controllers
             else
                 return InternalServerError();
         }
-
+        [NonAction]
         [Route("{customerId}/photo")]
         [HttpPut]
         public async Task<IHttpActionResult> UploadCustomerImage(int customerId, [FromBody] UploadCustomerPhotoModel model)
@@ -142,7 +142,7 @@ namespace CRMService.Controllers
             else
                 return InternalServerError();
         }
-
+        [NonAction]
         [Route("{customerId}/photo")]
         [HttpPatch]
         public async Task<IHttpActionResult> UploadCustomerPhoto(int customerId, [FromBody] JsonPatchDocument<CustomerModel> patchDoc)
@@ -168,7 +168,7 @@ namespace CRMService.Controllers
 
         [HttpPatch]
         [Route("{customerId}/upload")]
-        public async Task<IHttpActionResult> Upload(int customerId)
+        public async Task<IHttpActionResult> UploadPhotoFile(int customerId)
         {
             if (!Request.Content.IsMimeMultipartContent())
                 return this.StatusCode(HttpStatusCode.UnsupportedMediaType);

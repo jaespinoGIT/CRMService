@@ -17,6 +17,7 @@ namespace CRMService.Controllers
 {
     [ApiVersion("1.0")]
     [RoutePrefix("api/users")]
+    //[Authorize(Roles = "Admin")]
     public class UsersController : ApiController
     {
         private readonly IMapper _mapper;
@@ -63,11 +64,9 @@ namespace CRMService.Controllers
         [Route()]
         public async Task<IHttpActionResult> Post(UserModel model, bool userIsAdmin = false)
         {
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            Validate(model);
+            if (!ModelState.IsValid)            
+                return BadRequest(ModelState);           
             else
             {
                 var user = await _userService.AddUser(_mapper.Map<User>(model), userIsAdmin);
