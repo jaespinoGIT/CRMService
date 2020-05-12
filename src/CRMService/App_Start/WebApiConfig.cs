@@ -1,9 +1,12 @@
-﻿using Microsoft.Web.Http.Versioning;
+﻿using CRMService.Helpers;
+using CRMService.Helpers.Filters;
+using Microsoft.Web.Http.Versioning;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Web.Http;
+using System.Web.Http.ExceptionHandling;
 
 namespace CRMService
 {
@@ -14,7 +17,10 @@ namespace CRMService
             // Web API configuration and services           
             AutofacConfig.Register();
 
-           
+            //config.Filters.Add(new ItemNotFoundExceptionFilterAttribute());
+
+            //config.Services.Replace(typeof(IExceptionLogger), new UnhandledExceptionLogger());
+            config.Services.Replace(typeof(IExceptionHandler), new GlobalExceptionHandler());
 
             config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling
                 = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -34,7 +40,7 @@ namespace CRMService
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
+                defaults: new { id = RouteParameter.Optional}
             );
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using CRMService.Core.Exceptions.Services;
 using CRMService.Core.Services;
 using CRMService.Core.Services.Interfaces;
 using System;
@@ -17,6 +18,8 @@ namespace CRMService.Core
             bldr.RegisterType<CustomerService>().As<ICustomerService>().InstancePerLifetimeScope();   
 
             bldr.RegisterType<UserService>().As<IUserService>().InstancePerLifetimeScope();
+
+            bldr.RegisterType<CustomExceptionService>().As<ICustomExceptionService>().InstancePerLifetimeScope();
 
         }
     }
