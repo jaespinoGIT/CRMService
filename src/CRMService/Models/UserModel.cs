@@ -10,17 +10,14 @@ using System.Threading.Tasks;
 namespace CRMService.Models
 {
     public class UserModel
-    {        
-        public int UserId { get; set; }
-        [Required]
-        [StringLength(255, MinimumLength = 3)]
-        //[JsonConverter(typeof(NoConverter))]
-        public string Name { get; set; }
-        [Required]
-        [StringLength(20, MinimumLength = 5)]
-        public string Login { get; set; }
-        [Required]
-        public bool Active { get; set; }        
-        public ICollection<UserRoleModel> UserRoles { get; set; }
+    {
+        public string Url { get; set; }
+        public string Id { get; set; }
+        public string UserName { get; set; }
+        public string FullName { get; set; }       
+        public IList<string> Roles { get; set; }
+        public IList<System.Security.Claims.Claim> Claims { get; set; }
+        public string Email { get; set; }
+        public bool EmailConfirmed { get; set; }
     }
 }

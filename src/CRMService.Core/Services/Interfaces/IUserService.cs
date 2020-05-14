@@ -10,7 +10,7 @@ namespace CRMService.Core.Services.Interfaces
     public interface IUserService
     {
         Task<User> AddUser(User user, bool userIsAdmin = false);
-        Task<bool> DeleteUser(int userId);
+        //Task<bool> DeleteUser(int userId);
 
         Task<User> GetUserAsync(int userId, bool includeUserRoles = false);
 

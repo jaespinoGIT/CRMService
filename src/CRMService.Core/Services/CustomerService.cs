@@ -38,7 +38,7 @@ namespace CRMService.Core.Services
             var customer = await _customerRepository.GetCustomerAsync(customerId);
             if (customer == null) _customExceptionService.ThrowItemNotFoundException("Customer doesnt exists");
 
-            _customerRepository.DeleteCustomer(customer);
+            _customerRepository.Remove(customer);
 
             return await _customerRepository.SaveChangesAsync();
 
@@ -62,7 +62,7 @@ namespace CRMService.Core.Services
                         }
                 };
 
-            _customerRepository.AddCustomer(customer);
+            _customerRepository.Add(customer);
 
             if (await _customerRepository.SaveChangesAsync())
                 return customer;

@@ -25,24 +25,24 @@ namespace CRMService.Data.Migrations
 
                 ctx.Roles.Add(role);
 
-                User user = new User()
-                {                   
-                    Name = "Admin1 Surname1",
-                    Login = "AdminLogin",
-                    Active = true,
-                    UserRoles = new UserRole[]
-                    {
-                     new UserRole
-                     {                        
-                        Role = new Role
-                        {                           
-                            RoleName = "Admin"
-                        }
-                     }
-                    }
-                };
+                //User user = new User()
+                //{                   
+                //    Name = "Admin1 Surname1",
+                //    Login = "AdminLogin",
+                //    Active = true,
+                //    UserRoles = new UserRole[]
+                //    {
+                //     new UserRole
+                //     {                        
+                //        Role = new Role
+                //        {                           
+                //            RoleName = "Admin"
+                //        }
+                //     }
+                //    }
+                //};
 
-                ctx.Users.Add(user);
+                //ctx.Users.Add(user);
 
                 if (!ctx.Customers.Any())
                 {
@@ -55,8 +55,7 @@ namespace CRMService.Data.Migrations
                         new CustomerAudit
                         {
                             Date = DateTime.Now,
-                            Operation = 0,
-                            User = user
+                            Operation = 0                            
                         }
 
                         }

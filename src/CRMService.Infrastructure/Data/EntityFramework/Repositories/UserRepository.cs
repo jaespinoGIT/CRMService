@@ -25,16 +25,6 @@ namespace CRMService.Infrastructure.Data.EntityFramework.Repositories
             _dbSet = dbSet;
         }
 
-        public IQueryable<User> GetQueryable()
-        {
-            return _dbSet;
-        }
-
-        public void CreateUser(User user)
-        {
-            _dbSet.Add(user);
-        }
-
         public List<User> GetAll()
         {
             return _dbSet.AsQueryable().ToList();
@@ -68,8 +58,8 @@ namespace CRMService.Infrastructure.Data.EntityFramework.Repositories
 
             if (includeUserRoles)
             {
-                query = query.Include(c => c.UserRoles.Select(r => r.Role));
-                query = query.Include(c => c.UserRoles.Select(r => r.User));
+                //query = query.Include(c => c.UserRoles.Select(r => r.Role));
+                //query = query.Include(c => c.UserRoles.Select(r => r.User));
             }
 
             // Order It
@@ -85,12 +75,12 @@ namespace CRMService.Infrastructure.Data.EntityFramework.Repositories
             //Add user roles
             if (includeUserRoles)
             {
-                query = query.Include(c => c.UserRoles.Select(r => r.Role));
-                query = query.Include(c => c.UserRoles.Select(r => r.User));
+                //query = query.Include(c => c.UserRoles.Select(r => r.Role));
+                //query = query.Include(c => c.UserRoles.Select(r => r.User));
             }
             
             // Query It
-            query = query.Where(c => c.UserId == userId);
+            query = query.Where(c => c.Id == userId.ToString());
 
             return await query.FirstOrDefaultAsync();
             
@@ -102,12 +92,12 @@ namespace CRMService.Infrastructure.Data.EntityFramework.Repositories
             //Add user roles
             if (includeUserRoles)
             {
-                query = query.Include(c => c.UserRoles.Select(r => r.Role));
-                query = query.Include(c => c.UserRoles.Select(r => r.User));
+                //query = query.Include(c => c.UserRoles.Select(r => r.Role));
+                //query = query.Include(c => c.UserRoles.Select(r => r.User));
             }
 
             // Query It
-            query = query.Where(c => c.Login == login);
+            //query = query.Where(c => c.Login == login);
 
             return await query.FirstOrDefaultAsync();
 

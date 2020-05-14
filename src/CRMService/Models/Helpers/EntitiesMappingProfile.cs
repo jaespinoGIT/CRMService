@@ -13,17 +13,17 @@ namespace CRMService.Models
     {
         public EntitiesMappingProfile()
         {
-            CreateMap<User, UserModel>()
-                .ReverseMap().ForMember(um => um.UserId, opt => opt.Ignore())
-                .ForMember(um => um.UserRoles, opt => opt.Ignore());
+            //CreateMap<User, UserModel>()
+            //    .ReverseMap().ForMember(um => um.UserId, opt => opt.Ignore())
+            //    .ForMember(um => um.UserRoles, opt => opt.Ignore());
 
             CreateMap<Customer, CustomerModel>()
                     .ReverseMap().ForMember(um => um.CustomerId, opt => opt.Ignore())
                     .ForMember(um => um.CustomerAudits, opt => opt.Ignore());
 
-            CreateMap<Role, RoleModel>();
+            //CreateMap<Role, RoleModel>();
 
-            CreateMap<UserRole, UserRoleModel>();
+            //CreateMap<UserRole, UserRoleModel>();
         }
     }
 }

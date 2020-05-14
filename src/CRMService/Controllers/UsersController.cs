@@ -3,7 +3,9 @@ using CRMService.Core.Domain.Entities;
 using CRMService.Core.Repositories;
 using CRMService.Core.Services.Interfaces;
 using CRMService.Models;
+using CRMService.Models.Binding;
 using Marvin.JsonPatch;
+using Microsoft.AspNet.Identity;
 using Microsoft.Web.Http;
 using System;
 using System.Collections.Generic;
@@ -17,8 +19,8 @@ namespace CRMService.Controllers
 {
     [ApiVersion("1.0")]
     [RoutePrefix("api/users")]
-    //[Authorize(Roles = "Admin")]
-    public class UsersController : ApiController
+    [Authorize(Roles = "Admin")]
+    public class UsersController : BaseApiController
     {
         private readonly IMapper _mapper;
 
@@ -31,57 +33,72 @@ namespace CRMService.Controllers
         }
 
         [Route()]
-        public async Task<IHttpActionResult> Get(bool includeUserRoles = false)
+        public async Task<IHttpActionResult> Get()
         {
+            //Only SuperAdmin or Admin can delete users (Later when implement roles)
+            var identity = User.Identity as System.Security.Claims.ClaimsIdentity;
 
-            var result = await _userService.GetAllUsersAsync(includeUserRoles);
-
-            if (result == null)
-                return NotFound();
-            // Mapping 
-            var mappedResult = _mapper.Map<IEnumerable<UserModel>>(result);
-
-            return Ok(mappedResult);
+            return Ok(this.AppUserManager.Users.ToList().Select(u => this.TheModelFactory.Create(u)));
 
         }
-
 
         [Route("{userId}", Name = "GetUser")]
-        public async Task<IHttpActionResult> Get(int userId, bool includeUserRoles = true)
+        public async Task<IHttpActionResult> Get(string userId)
         {
+            //Only SuperAdmin or Admin can delete users (Later when implement roles)
+            var user = await this.AppUserManager.FindByIdAsync(userId);
 
-            var result = await _userService.GetUserAsync(userId, includeUserRoles);
-
-            if (result == null)
-                return NotFound();
-
-            var mappedResult = _mapper.Map<UserModel>(result);
-
-            return Ok(mappedResult);
-
-        }
-
-        [Route()]
-        public async Task<IHttpActionResult> Post(UserModel model, bool userIsAdmin = false)
-        {
-            Validate(model);
-            if (!ModelState.IsValid)            
-                return BadRequest(ModelState);           
-            else
+            if (user != null)
             {
-                var user = await _userService.AddUser(_mapper.Map<User>(model), userIsAdmin);
-                if (user != null)
-                {
-                    var newModel = _mapper.Map<UserModel>(user);
-
-                    return CreatedAtRoute("GetUser", new { userId = newModel.UserId }, newModel);
-                }
+                return Ok(this.TheModelFactory.Create(user));
             }
 
-            return BadRequest();
+            return NotFound();
         }
 
-        [Route("{userId}")]       
+        [Route("user/{username}")]
+        public async Task<IHttpActionResult> GetUserByName(string username)
+        {
+            //Only SuperAdmin or Admin can delete users (Later when implement roles)
+            var user = await this.AppUserManager.FindByNameAsync(username);
+
+            if (user != null)
+            {
+                return Ok(this.TheModelFactory.Create(user));
+            }
+
+            return NotFound();
+
+        }
+
+
+        [Route()]
+        public async Task<IHttpActionResult> Post(CreateUserBindingModel createUserModel)
+        {
+            Validate(createUserModel);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = new User()
+            {
+                UserName = createUserModel.Username,
+                Email = createUserModel.Email,
+                FirstName = createUserModel.FirstName,
+                LastName = createUserModel.LastName
+            };
+
+            IdentityResult addUserResult = await this.AppUserManager.CreateAsync(user, createUserModel.Password);
+
+            if (!addUserResult.Succeeded)
+            {
+                return GetErrorResult(addUserResult);
+            }
+            var newModel = TheModelFactory.Create(user);
+
+            return CreatedAtRoute("GetUser", new { userId = newModel.Id }, newModel);
+        }
+
+        [Route("{userId}")]
         public async Task<IHttpActionResult> Put(int userId, UserModel model)
         {
             var user = await _userService.GetUserAsync(userId, true);
@@ -97,16 +114,16 @@ namespace CRMService.Controllers
 
         }
 
-        [Route("{userId}")]
-        public async Task<IHttpActionResult> Delete(int userId)
-        {
+        //[Route("{userId}")]
+        //public async Task<IHttpActionResult> Delete(int userId)
+        //{
 
-            if (await _userService.DeleteUser(userId))
-                return Ok();
-            else
-                return BadRequest();
+        //    if (await _userService.DeleteUser(userId))
+        //        return Ok();
+        //    else
+        //        return BadRequest();
 
-        }
+        //}
         [Route("{userId}")]
         public async Task<IHttpActionResult> Patch(int userId, [FromBody] JsonPatchDocument<UserModel> patchDoc)
         {
@@ -135,7 +152,7 @@ namespace CRMService.Controllers
         }
 
         [HttpPut]
-        [Route("{userId}/changeadminstatus")]        
+        [Route("{userId}/changeadminstatus")]
         public async Task<IHttpActionResult> ChangeAdminStatus(int userId, bool newAdminStatus = true)
         {
 

@@ -9,11 +9,8 @@ namespace CRMService.Models
 {
     public class RoleModel
     {
-        [Required]
-        public int RoleId { get; set; }
-        [Required]
-        [StringLength(50, MinimumLength = 3)]
-        public string RoleName { get; set; }
-        public bool RoleIsAdmin { get; set; }
+        public string Url { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
     }
 }

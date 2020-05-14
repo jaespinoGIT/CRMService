@@ -7,9 +7,9 @@ namespace CRMService.Core.Repositories
 {
     public interface IUserRepository
     {
-        IQueryable<User> GetQueryable();
+        //IQueryable<User> GetQueryable();
 
-        void CreateUser(User user);
+        //void CreateUser(User user);
 
         List<User> GetAll();
 
