@@ -318,10 +318,10 @@
   <ItemGroup>
     <Compile Include="App_Start\AutofacConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\BaseApiController.cs" />
+    <Compile Include="Controllers\Base\BaseApiController.cs" />
     <Compile Include="Controllers\ClaimsController.cs" />
     <Compile Include="Controllers\CustomersController.cs" />
-    <Compile Include="Controllers\UsersControllerOld.cs" />
+    <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -338,13 +338,16 @@
     <Compile Include="Models\Binding\ChangePasswordBindingModel.cs" />
     <Compile Include="Models\Binding\ClaimBindingModel.cs" />
     <Compile Include="Models\Binding\CreateUserBindingModel.cs" />
+    <Compile Include="Models\Binding\RoleBindingModels.cs" />
     <Compile Include="Models\CustomerAuditModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
+    <Compile Include="Models\Helpers\ApplicationRoleManager.cs" />
     <Compile Include="Models\Helpers\ApplicationUserManager.cs" />
+    <Compile Include="Models\Helpers\Claims\ExtendedClaimsProvider.cs" />
+    <Compile Include="Models\Helpers\Claims\RolesFromClaims.cs" />
     <Compile Include="Models\Helpers\EntitiesMappingProfile.cs" />
     <Compile Include="Models\Helpers\ModelFactory.cs" />
     <Compile Include="Models\UploadCustomerPhotoModel.cs" />
-    <Compile Include="Models\UserRoleModel.cs" />
     <Compile Include="Models\RoleModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

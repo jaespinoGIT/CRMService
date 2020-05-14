@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Autofac;
 using CRMService.Core.Repositories;
+
 using CRMService.Infrastructure.Data.EntityFramework;
 using CRMService.Infrastructure.Data.EntityFramework.Repositories;
+
 
 namespace CRMService.Infrastructure
 {
@@ -18,17 +20,9 @@ namespace CRMService.Infrastructure
             bldr.RegisterType<DataContext>()
              .InstancePerLifetimeScope();
 
-            bldr.RegisterType<UserRepository>()
-                   .As<IUserRepository>()
-                   .InstancePerLifetimeScope();
-
             bldr.RegisterType<CustomerRepository>()
                .As<ICustomerRepository>()
-               .InstancePerLifetimeScope();
-
-            bldr.RegisterType<RoleRepository>()
-                .As<IRoleRepository>()
-                .InstancePerLifetimeScope();
+               .InstancePerLifetimeScope();      
         }
     }
 }

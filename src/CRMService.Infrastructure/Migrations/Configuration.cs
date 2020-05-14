@@ -5,6 +5,8 @@ using System.Linq;
 using CRMService.Infrastructure.Data.EntityFramework;
 using CRMService.Infrastructure.Data;
 using CRMService.Core.Domain.Entities;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace CRMService.Data.Migrations
 {
@@ -12,61 +14,63 @@ namespace CRMService.Data.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
             ContextKey = "CRMService.Infrastructure.DataContext";
         }
 
         protected override void Seed(DataContext ctx)
         {
-            if (!ctx.Users.Any())
+            var manager = new UserManager<User>(new UserStore<User>(ctx));
+
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(ctx));
+
+            var user = new User()
             {
-                Role role = new Role()
-                { RoleName = "User" };
+                UserName = "SuperPowerUser",
+                Email = "examplemail@gmail.com",
+                EmailConfirmed = true,
+                FirstName = "Jose",
+                LastName = "Espino"
+            };
 
-                ctx.Roles.Add(role);
+            manager.Create(user, "MySuperP@ss!");
 
-                //User user = new User()
-                //{                   
-                //    Name = "Admin1 Surname1",
-                //    Login = "AdminLogin",
-                //    Active = true,
-                //    UserRoles = new UserRole[]
-                //    {
-                //     new UserRole
-                //     {                        
-                //        Role = new Role
-                //        {                           
-                //            RoleName = "Admin"
-                //        }
-                //     }
-                //    }
-                //};
+            if (roleManager.Roles.Count() == 0)
+            {
+                roleManager.Create(new IdentityRole { Name = "SuperAdmin" });
+                roleManager.Create(new IdentityRole { Name = "Admin" });
+                roleManager.Create(new IdentityRole { Name = "User" });
+            }
 
-                //ctx.Users.Add(user);
+            var adminUser = manager.FindByName("SuperPowerUser");
 
-                if (!ctx.Customers.Any())
+            manager.AddToRoles(adminUser.Id, new string[] { "SuperAdmin", "Admin" });
+
+
+            if (!ctx.Customers.Any())
+            {
+                Customer customer = new Customer()
                 {
-                    Customer customer = new Customer()
+                    Name = "Customer1",
+                    Surname = "Surname1",
+                    CustomerAudits = new CustomerAudit[]
                     {
-                        Name = "Customer1",
-                        Surname = "Surname1",
-                        CustomerAudits = new CustomerAudit[]
-                        {
                         new CustomerAudit
                         {
                             Date = DateTime.Now,
-                            Operation = 0                            
+                            Operation = 0,
+                            User = adminUser
                         }
 
                         }
 
-                    };
+                };
 
-                    ctx.Customers.Add(customer);
-                }
+                ctx.Customers.Add(customer);
+            }
 
-                base.Seed(ctx);
-            }           
+            base.Seed(ctx);
+
 
         }
     }

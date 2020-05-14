@@ -1,14 +1,11 @@
-﻿using Microsoft.Owin.Security.OAuth;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CRMService.Core.Domain.Entities;
+using CRMService.Models.Helpers;
+using CRMService.Models.Helpers.Claims;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using CRMService.Core.Domain.Entities;
-using CRMService.Models;
+using Microsoft.Owin.Security.OAuth;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace CRMService.Helpers.Auth
 {
@@ -39,15 +36,9 @@ namespace CRMService.Helpers.Auth
                 return;
             }
 
-            if (!user.EmailConfirmed)
-            {
-                context.SetError("invalid_grant", "User did not confirm email.");
-                return;
-            }
-
             ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager, "JWT");
-            //oAuthIdentity.AddClaims(ExtendedClaimsProvider.GetClaims(user));
-            //oAuthIdentity.AddClaims(RolesFromClaims.CreateRolesBasedOnClaims(oAuthIdentity));
+            oAuthIdentity.AddClaims(ExtendedClaimsProvider.GetClaims(user));
+            oAuthIdentity.AddClaims(RolesFromClaims.CreateRolesBasedOnClaims(oAuthIdentity));
 
             var ticket = new AuthenticationTicket(oAuthIdentity, null);
 

@@ -10,7 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using CRMService.Infrastructure.Data.EntityFramework;
 
-namespace CRMService.Models
+namespace CRMService.Models.Helpers
 {
 
     public class ApplicationUserManager : UserManager<User>
@@ -22,7 +22,7 @@ namespace CRMService.Models
 
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
         {
-            var appDbContext = context.Get<ApplicationDbContext>();
+            var appDbContext = context.Get<DataContext>();
             var appUserManager = new ApplicationUserManager(new UserStore<User>(appDbContext));
 
             // Configure validation logic for usernames

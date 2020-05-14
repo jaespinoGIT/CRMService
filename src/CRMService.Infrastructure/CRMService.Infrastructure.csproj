@@ -146,16 +146,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\EntityFramework\ApplicationDbContext.cs" />
     <Compile Include="Data\EntityFramework\DataContext.cs" />
-    <Compile Include="Data\EntityFramework\Repositories\Abstract\Repository.cs" />
-    <Compile Include="Data\EntityFramework\Repositories\RoleRepository.cs" />
     <Compile Include="InfrastructureModule.cs" />
-    <Compile Include="Data\EntityFramework\Repositories\UserRepository.cs" />
     <Compile Include="Data\EntityFramework\Repositories\CustomerRepository.cs" />
-    <Compile Include="Migrations\202005101519275_Initial.cs" />
-    <Compile Include="Migrations\202005101519275_Initial.designer.cs">
-      <DependentUpon>202005101519275_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\202005141221240_initial.cs" />
+    <Compile Include="Migrations\202005141221240_initial.designer.cs">
+      <DependentUpon>202005141221240_initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -171,11 +167,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202005101519275_Initial.resx">
-      <DependentUpon>202005101519275_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202005141221240_initial.resx">
+      <DependentUpon>202005141221240_initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

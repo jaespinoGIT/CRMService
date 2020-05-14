@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -9,10 +10,10 @@ using System.Web.Http;
 namespace CRMService.Controllers
 {
     [RoutePrefix("api/claims")]
+    [ApiVersion("1.0")]
     public class ClaimsController : BaseApiController
     {
-        [Authorize]
-        [Route("")]
+        [Authorize]       
         public IHttpActionResult GetClaims()
         {
             var identity = User.Identity as ClaimsIdentity;

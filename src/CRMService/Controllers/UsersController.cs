@@ -1,17 +1,11 @@
-﻿using AutoMapper;
+﻿
 using CRMService.Core.Domain.Entities;
-using CRMService.Core.Repositories;
-using CRMService.Core.Services.Interfaces;
-using CRMService.Models;
 using CRMService.Models.Binding;
-using Marvin.JsonPatch;
+using CRMService.Models.Helpers.Claims;
 using Microsoft.AspNet.Identity;
 using Microsoft.Web.Http;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -21,16 +15,7 @@ namespace CRMService.Controllers
     [RoutePrefix("api/users")]
     [Authorize(Roles = "Admin")]
     public class UsersController : BaseApiController
-    {
-        private readonly IMapper _mapper;
-
-        private readonly IUserService _userService;
-
-        public UsersController(IUserService userService, IMapper mapper)
-        {
-            _userService = userService;
-            _mapper = mapper;
-        }
+    { 
 
         [Route()]
         public async Task<IHttpActionResult> Get()
@@ -42,7 +27,7 @@ namespace CRMService.Controllers
 
         }
 
-        [Route("{userId}", Name = "GetUser")]
+        [Route("{userId}", Name = "GetUserById")]
         public async Task<IHttpActionResult> Get(string userId)
         {
             //Only SuperAdmin or Admin can delete users (Later when implement roles)
@@ -95,74 +80,161 @@ namespace CRMService.Controllers
             }
             var newModel = TheModelFactory.Create(user);
 
-            return CreatedAtRoute("GetUser", new { userId = newModel.Id }, newModel);
+            return CreatedAtRoute("GetUserById", new { userId = newModel.Id }, newModel);
         }
 
-        [Route("{userId}")]
-        public async Task<IHttpActionResult> Put(int userId, UserModel model)
+        [Authorize]
+        [Route("ChangePassword")]
+        public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
         {
-            var user = await _userService.GetUserAsync(userId, true);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            _mapper.Map(model, user);
+            IdentityResult result = await this.AppUserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
 
-            var userUpdated = await _userService.UpdateUser(user);
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
 
-            if (userUpdated == null)
-                return InternalServerError();
-            else
-                return Ok(_mapper.Map<UserModel>(userUpdated));
-
+            return Ok();
         }
 
-        //[Route("{userId}")]
-        //public async Task<IHttpActionResult> Delete(int userId)
-        //{
-
-        //    if (await _userService.DeleteUser(userId))
-        //        return Ok();
-        //    else
-        //        return BadRequest();
-
-        //}
-        [Route("{userId}")]
-        public async Task<IHttpActionResult> Patch(int userId, [FromBody] JsonPatchDocument<UserModel> patchDoc)
+        [Authorize(Roles = "Admin")]
+        [Route("user/{id:guid}")]
+        public async Task<IHttpActionResult> DeleteUser(string id)
         {
 
-            // If the received data is null
-            if (patchDoc == null)
-                return BadRequest();
+            //Only SuperAdmin or Admin can delete users (Later when implement roles)
 
-            var user = await _userService.GetUserAsync(userId, false);
-            if (user == null) return NotFound();
+            var appUser = await this.AppUserManager.FindByIdAsync(id);
 
-            var userModelToPatch = _mapper.Map<UserModel>(user);
+            if (appUser != null)
+            {
+                IdentityResult result = await this.AppUserManager.DeleteAsync(appUser);
 
-            patchDoc.ApplyTo(userModelToPatch);
+                if (!result.Succeeded)
+                {
+                    return GetErrorResult(result);
+                }
 
-            // Assign entity changes to original entity retrieved from database
-            _mapper.Map(userModelToPatch, user);
+                return Ok();
 
-            var userUpdated = await _userService.UpdateUser(user);
+            }
 
-            if (userUpdated == null)
-                return InternalServerError();
-            else
-                return Ok(_mapper.Map<UserModel>(userUpdated));
+            return NotFound();
 
         }
 
+        [Authorize(Roles = "Admin")]
+        [Route("user/{id:guid}/roles")]
         [HttpPut]
-        [Route("{userId}/changeadminstatus")]
-        public async Task<IHttpActionResult> ChangeAdminStatus(int userId, bool newAdminStatus = true)
+        public async Task<IHttpActionResult> AssignRolesToUser([FromUri] string id, [FromBody] string[] rolesToAssign)
         {
 
-            var userUpdated = await _userService.ChangeAdminStatus(userId, newAdminStatus);
+            var appUser = await this.AppUserManager.FindByIdAsync(id);
 
-            if (userUpdated == null)
-                return InternalServerError();
-            else
-                return Ok(_mapper.Map<UserModel>(userUpdated));
+            if (appUser == null)
+            {
+                return NotFound();
+            }
+
+            var currentRoles = await this.AppUserManager.GetRolesAsync(appUser.Id);
+
+            var rolesNotExists = rolesToAssign.Except(this.AppRoleManager.Roles.Select(x => x.Name)).ToArray();
+
+            if (rolesNotExists.Count() > 0)
+            {
+
+                ModelState.AddModelError("", string.Format("Roles '{0}' does not exixts in the system", string.Join(",", rolesNotExists)));
+                return BadRequest(ModelState);
+            }
+
+            IdentityResult removeResult = await this.AppUserManager.RemoveFromRolesAsync(appUser.Id, currentRoles.ToArray());
+
+            if (!removeResult.Succeeded)
+            {
+                ModelState.AddModelError("", "Failed to remove user roles");
+                return BadRequest(ModelState);
+            }
+
+            IdentityResult addResult = await this.AppUserManager.AddToRolesAsync(appUser.Id, rolesToAssign);
+
+            if (!addResult.Succeeded)
+            {
+                ModelState.AddModelError("", "Failed to add user roles");
+                return BadRequest(ModelState);
+            }
+
+            return Ok();
 
         }
+
+        [Authorize(Roles = "Admin")]
+        [Route("user/{id:guid}/assignclaims")]
+        [HttpPut]
+        public async Task<IHttpActionResult> AssignClaimsToUser([FromUri] string id, [FromBody] List<ClaimBindingModel> claimsToAssign)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var appUser = await this.AppUserManager.FindByIdAsync(id);
+
+            if (appUser == null)
+            {
+                return NotFound();
+            }
+
+            foreach (ClaimBindingModel claimModel in claimsToAssign)
+            {
+                if (appUser.Claims.Any(c => c.ClaimType == claimModel.Type))
+                {
+
+                    await this.AppUserManager.RemoveClaimAsync(id, ExtendedClaimsProvider.CreateClaim(claimModel.Type, claimModel.Value));
+                }
+
+                await this.AppUserManager.AddClaimAsync(id, ExtendedClaimsProvider.CreateClaim(claimModel.Type, claimModel.Value));
+            }
+
+            return Ok();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [Route("user/{id:guid}/removeclaims")]
+        [HttpPut]
+        public async Task<IHttpActionResult> RemoveClaimsFromUser([FromUri] string id, [FromBody] List<ClaimBindingModel> claimsToRemove)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var appUser = await this.AppUserManager.FindByIdAsync(id);
+
+            if (appUser == null)
+            {
+                return NotFound();
+            }
+
+            foreach (ClaimBindingModel claimModel in claimsToRemove)
+            {
+                if (appUser.Claims.Any(c => c.ClaimType == claimModel.Type))
+                {
+                    await this.AppUserManager.RemoveClaimAsync(id, ExtendedClaimsProvider.CreateClaim(claimModel.Type, claimModel.Value));
+                }
+            }
+
+            return Ok();
+        }
+
+
+
+
     }
 }

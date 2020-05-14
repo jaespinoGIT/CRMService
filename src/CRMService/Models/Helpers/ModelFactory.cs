@@ -1,4 +1,5 @@
 ﻿using CRMService.Core.Domain.Entities;
+using CRMService.Models.Helpers;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
@@ -37,7 +38,6 @@ namespace CRMService.Models
 
         public RoleModel Create(IdentityRole appRole)
         {
-
             return new RoleModel
             {
                 Url = _UrlHelper.Link("GetRoleById", new { id = appRole.Id }),

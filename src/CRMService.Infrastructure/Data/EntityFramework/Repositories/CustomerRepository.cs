@@ -8,22 +8,68 @@ using System.Data.Entity;
 
 using CRMService.Core.Domain.Entities;
 using CRMService.Core.Repositories;
-using CRMService.Infrastructure.Data.EntityFramework.Repositories.Abstract;
+
 
 namespace CRMService.Infrastructure.Data.EntityFramework.Repositories
 {
-    public class CustomerRepository : Repository<Customer>, ICustomerRepository
-    { 
-        public DataContext Context
+    public class CustomerRepository : ICustomerRepository
+    {
+        private readonly DataContext _context;
+
+
+        private readonly DbSet<Customer> _dbSet;
+
+        public CustomerRepository()
         {
-            get { return DatabaseContext as DataContext; }
+
+        }
+        public CustomerRepository(DbSet<Customer> dbSet)
+        {
+            _dbSet = dbSet;
         }
 
-        public CustomerRepository(DataContext context) : base(context) { }
+        public void CreateCustomer(Customer customer)
+        {
+            _dbSet.Add(customer);
+        }
+
+        public IQueryable<Customer> GetQueryable()
+        {
+            return _dbSet;
+        }
+        public List<Customer> GetAll()
+        {
+            return _dbSet.AsQueryable().ToList();
+        }
+
+        public CustomerRepository(DataContext context)
+        {
+            _context = context;
+        }
+
+        public void AddCustomer(Customer customer)
+        {
+            _context.Customers.Add(customer);
+        }
+
+        public void DeleteCustomer(Customer customer)
+        {
+
+            _context.Customers.Remove(customer);
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            // Only return success if at least one row was changed
+            return (await _context.SaveChangesAsync()) > 0;
+        }
+
+
+
 
         public async Task<List<Customer>> GetAllCustomersAsync(bool full = false)
         {
-            IQueryable<Customer> query = Context.Customers;
+            IQueryable<Customer> query = _context.Customers;
             query = query.OrderByDescending(c => c.Name);
 
             if (full)
@@ -52,7 +98,7 @@ namespace CRMService.Infrastructure.Data.EntityFramework.Repositories
             if (full)
             {
                 query = query.Include(c => c.CustomerAudits.Select(r => r.Customer));
-                query = query.Include(c => c.CustomerAudits.Select(r => r.User));
+                query = query.Include(c => c.CustomerAudits.Select(r => r.Customer));
 
                 return await query.FirstOrDefaultAsync();
             }
@@ -71,7 +117,7 @@ namespace CRMService.Infrastructure.Data.EntityFramework.Repositories
 
         public Task<Customer> GetCustomerAsync(int customerId, bool full = false)
         {
-            IQueryable<Customer> query = Context.Customers
+            IQueryable<Customer> query = _context.Customers
                  .Where(t => t.CustomerId == customerId);
 
             return GetCustomerAsync(query, full);
@@ -79,7 +125,7 @@ namespace CRMService.Infrastructure.Data.EntityFramework.Repositories
 
         public Task<Customer> GetCustomerByNameAsync(string name, bool full = false)
         {
-            IQueryable<Customer> query = Context.Customers
+            IQueryable<Customer> query = _context.Customers
                         .Where(c => c.Name == name);
 
             return GetCustomerAsync(query, full);

@@ -6,6 +6,7 @@ using System.Web;
 
 using System.Net.Http;
 using System.Web.Http;
+using CRMService.Models.Helpers;
 
 namespace CRMService.Controllers
 {
@@ -14,7 +15,7 @@ namespace CRMService.Controllers
 
         private ModelFactory _modelFactory;
         private ApplicationUserManager _AppUserManager = null;
-        //private ApplicationRoleManager _AppRoleManager = null;
+        private ApplicationRoleManager _AppRoleManager = null;
 
         protected ApplicationUserManager AppUserManager
         {
@@ -24,13 +25,13 @@ namespace CRMService.Controllers
             }
         }
 
-        //protected ApplicationRoleManager AppRoleManager
-        //{
-        //    get
-        //    {
-        //        return _AppRoleManager ?? Request.GetOwinContext().GetUserManager<ApplicationRoleManager>();
-        //    }
-        //}
+        protected ApplicationRoleManager AppRoleManager
+        {
+            get
+            {
+                return _AppRoleManager ?? Request.GetOwinContext().GetUserManager<ApplicationRoleManager>();
+            }
+        }
 
         public BaseApiController()
         {

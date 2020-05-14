@@ -20,22 +20,20 @@ namespace CRMService
             // Web API configuration and services           
             AutofacConfig.Register();
             config.Filters.Add(new ValidateModelAttribute());
-            //config.Filters.Add(new ItemNotFoundExceptionFilterAttribute());
+            config.Filters.Add(new ItemNotFoundExceptionFilterAttribute());
 
             //Anti xss config
             config.Formatters.JsonFormatter.SerializerSettings.Converters = new List<JsonConverter>
-{
-    new AntiXssConverter()
-};
+            {
+                new AntiXssConverter()
+            };
             config.Formatters.JsonFormatter.SerializerSettings.StringEscapeHandling =
     StringEscapeHandling.EscapeHtml;
-
-
 
             config.Services.Replace(typeof(IExceptionHandler), new GlobalExceptionHandler());
             //Avoid child auto reference
             config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling
-                = Newtonsoft.Json.ReferenceLoopHandling.Ignore;                     
+                = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             //Api versioning
             config.AddApiVersioning(cfg =>
             {
@@ -50,12 +48,13 @@ namespace CRMService
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional}
+                defaults: new { id = RouteParameter.Optional }
             );
+
             //WebApiThrottle
             config.MessageHandlers.Add(new ThrottlingHandler()
             {
-                Policy = new ThrottlePolicy(perSecond: 1, perMinute: 30)
+                Policy = new ThrottlePolicy(perSecond: 5, perMinute: 30)
                 {
                     IpThrottling = true,
                     ClientThrottling = true,
@@ -63,6 +62,7 @@ namespace CRMService
                 },
                 Repository = new CacheRepository()
             });
+
         }
     }
 }

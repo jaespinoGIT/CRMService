@@ -25,6 +25,7 @@ using CRMService.Core.Exceptions.Services;
 namespace CRMService.Controllers
 {
     [ApiVersion("1.0")]
+    [Authorize()]
     [RoutePrefix("api/customers")]
     public class CustomersController : ApiController
     {

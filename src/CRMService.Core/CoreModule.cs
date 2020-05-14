@@ -15,9 +15,7 @@ namespace CRMService.Core
         protected override void Load(ContainerBuilder bldr)
         {        
 
-            bldr.RegisterType<CustomerService>().As<ICustomerService>().InstancePerLifetimeScope();   
-
-            bldr.RegisterType<UserService>().As<IUserService>().InstancePerLifetimeScope();
+            bldr.RegisterType<CustomerService>().As<ICustomerService>().InstancePerLifetimeScope();            
 
             bldr.RegisterType<CustomExceptionService>().As<ICustomExceptionService>().InstancePerLifetimeScope();
 
