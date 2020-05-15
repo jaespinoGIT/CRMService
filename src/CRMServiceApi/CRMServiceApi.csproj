@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>2bca2211-a9d3-46fd-a52a-14a9ffa0748c</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Microsoft.NETCore.App" Version="2.2.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CRMService.Core\CRMService.Core.csproj" />
+    <ProjectReference Include="..\CRMService.Infrastructure\CRMService.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,3 +1,4 @@
+using CRMService.Helpers.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,12 @@ namespace CRMService
     {
         protected void Application_Start()
         {
+            GlobalConfiguration.Configuration.Filters.Add(
+    new NullModelStateActionFilter
+    {
+        ReturnsBadRequest = true
+    }
+);
             GlobalConfiguration.Configure(WebApiConfig.Register);
         }
     }
