@@ -10,6 +10,7 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.ExceptionHandling;
 using WebApiThrottle;
+using Microsoft.Owin.Security.OAuth;
 
 namespace CRMService
 {
@@ -17,10 +18,14 @@ namespace CRMService
     {
         public static void Register(HttpConfiguration config)
         {
-            // Web API configuration and services           
-            AutofacConfig.Register();
+            // Web API configuration and services
+            // Configure Web API to use only bearer token authentication.
+            config.SuppressDefaultHostAuthentication();
+            config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));            
             config.Filters.Add(new ValidateModelAttribute());
             config.Filters.Add(new ItemNotFoundExceptionFilterAttribute());
+
+            AutofacConfig.Register();
 
             //Anti xss config
             config.Formatters.JsonFormatter.SerializerSettings.Converters = new List<JsonConverter>

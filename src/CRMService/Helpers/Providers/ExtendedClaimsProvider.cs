@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Security.Claims;
 using CRMService.Core.Domain.Entities;
 
-namespace CRMService.Models.Helpers.Claims
+namespace CRMService.Helpers.Auth
 {
     public class ExtendedClaimsProvider
     {

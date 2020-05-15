@@ -101,7 +101,30 @@ namespace CRMService.Core.UnitTests.Services
             customerRepository.Verify(r => r.AddCustomer(customer));
 
             Assert.IsNotNull(result);
-            //Assert.IsTrue(result);
+            Assert.AreEqual(customer.CustomerId, result.CustomerId);
+            Assert.AreEqual(customer.Name, result.Name);
+            Assert.AreEqual(customer.Surname, result.Surname);
+        }
+
+        [TestMethod]
+        [DataRow(2)]
+        public async Task UpdaCustomer(int customerId)
+        {
+            Customer customer = customersList.Find(c => c.CustomerId == customerId);
+
+            customerRepository.Setup(x => x.GetCustomerByNameAsync(customer.Name, false));
+
+            
+
+            var service = new CustomerService(customerRepository.Object);
+
+            var result = await service.AddCustomer(customer);
+            customerRepository.Verify(r => r.AddCustomer(customer));
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(customer.CustomerId, result.CustomerId);
+            Assert.AreEqual(customer.Name, result.Name);
+            Assert.AreEqual(customer.Surname, result.Surname);
         }
     }
 }

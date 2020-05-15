@@ -1,6 +1,5 @@
 ﻿using CRMService.Core.Domain.Entities;
-using CRMService.Models.Helpers;
-using CRMService.Models.Helpers.Claims;
+
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;

@@ -1,7 +1,8 @@
 ﻿
 using CRMService.Core.Domain.Entities;
+using CRMService.Helpers.Auth;
 using CRMService.Models.Binding;
-using CRMService.Models.Helpers.Claims;
+
 using Microsoft.AspNet.Identity;
 using Microsoft.Web.Http;
 using System.Collections.Generic;
@@ -11,16 +12,15 @@ using System.Web.Http;
 
 namespace CRMService.Controllers
 {
-    [ApiVersion("1.0")]
-    [RoutePrefix("api/users")]
     [Authorize(Roles = "Admin")]
+    [ApiVersion("1.0")]
+    [RoutePrefix("api/users")]    
     public class UsersController : BaseApiController
     { 
 
         [Route()]
         public async Task<IHttpActionResult> Get()
-        {
-            //Only SuperAdmin or Admin can delete users (Later when implement roles)
+        {          
             var identity = User.Identity as System.Security.Claims.ClaimsIdentity;
 
             return Ok(this.AppUserManager.Users.ToList().Select(u => this.TheModelFactory.Create(u)));
@@ -30,7 +30,7 @@ namespace CRMService.Controllers
         [Route("{userId}", Name = "GetUserById")]
         public async Task<IHttpActionResult> Get(string userId)
         {
-            //Only SuperAdmin or Admin can delete users (Later when implement roles)
+          
             var user = await this.AppUserManager.FindByIdAsync(userId);
 
             if (user != null)
@@ -44,7 +44,7 @@ namespace CRMService.Controllers
         [Route("user/{username}")]
         public async Task<IHttpActionResult> GetUserByName(string username)
         {
-            //Only SuperAdmin or Admin can delete users (Later when implement roles)
+           
             var user = await this.AppUserManager.FindByNameAsync(username);
 
             if (user != null)
@@ -82,9 +82,9 @@ namespace CRMService.Controllers
 
             return CreatedAtRoute("GetUserById", new { userId = newModel.Id }, newModel);
         }
-
-        [Authorize]
+               
         [Route("ChangePassword")]
+        [HttpPut]
         public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
         {
             if (!ModelState.IsValid)
@@ -101,13 +101,11 @@ namespace CRMService.Controllers
 
             return Ok();
         }
-
-        [Authorize(Roles = "Admin")]
-        [Route("user/{id:guid}")]
-        public async Task<IHttpActionResult> DeleteUser(string id)
+              
+        [Route("{id:guid}")]
+        public async Task<IHttpActionResult> Delete(string id)
         {
-
-            //Only SuperAdmin or Admin can delete users (Later when implement roles)
+           
 
             var appUser = await this.AppUserManager.FindByIdAsync(id);
 
@@ -128,8 +126,8 @@ namespace CRMService.Controllers
 
         }
 
-        [Authorize(Roles = "Admin")]
-        [Route("user/{id:guid}/roles")]
+       
+        [Route("{id:guid}/roles")]
         [HttpPut]
         public async Task<IHttpActionResult> AssignRolesToUser([FromUri] string id, [FromBody] string[] rolesToAssign)
         {
@@ -171,9 +169,8 @@ namespace CRMService.Controllers
             return Ok();
 
         }
-
-        [Authorize(Roles = "Admin")]
-        [Route("user/{id:guid}/assignclaims")]
+       
+        [Route("{id:guid}/assignclaims")]
         [HttpPut]
         public async Task<IHttpActionResult> AssignClaimsToUser([FromUri] string id, [FromBody] List<ClaimBindingModel> claimsToAssign)
         {
@@ -203,9 +200,8 @@ namespace CRMService.Controllers
 
             return Ok();
         }
-
-        [Authorize(Roles = "Admin")]
-        [Route("user/{id:guid}/removeclaims")]
+                
+        [Route("{id:guid}/removeclaims")]
         [HttpPut]
         public async Task<IHttpActionResult> RemoveClaimsFromUser([FromUri] string id, [FromBody] List<ClaimBindingModel> claimsToRemove)
         {

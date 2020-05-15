@@ -1,17 +1,13 @@
 ﻿using CRMService.Core.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CRMService.Infrastructure.Data.EntityFramework;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
-using CRMService.Infrastructure.Data.EntityFramework;
 
-namespace CRMService.Models.Helpers
+namespace CRMService
 {
+    // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
 
     public class ApplicationUserManager : UserManager<User>
     {
@@ -23,6 +19,7 @@ namespace CRMService.Models.Helpers
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
         {
             var appDbContext = context.Get<DataContext>();
+            //Calling the non-default constructor of the UserStore class
             var appUserManager = new ApplicationUserManager(new UserStore<User>(appDbContext));
 
             // Configure validation logic for usernames
@@ -40,10 +37,30 @@ namespace CRMService.Models.Helpers
                 RequireDigit = false,
                 RequireLowercase = true,
                 RequireUppercase = true,
-            };       
+            };
 
             return appUserManager;
         }
 
     }
+    /// <summary>
+    /// The role manager used by the application to store roles and their connections to users
+    /// </summary>
+    public class ApplicationRoleManager : RoleManager<IdentityRole>
+    {
+        public ApplicationRoleManager(IRoleStore<IdentityRole, string> roleStore)
+            : base(roleStore)
+        {
+        }
+
+        public static ApplicationRoleManager Create(IdentityFactoryOptions<ApplicationRoleManager> options, IOwinContext context)
+        {
+            ///It is based on the same context as the ApplicationUserManager
+            var appRoleManager = new ApplicationRoleManager(new RoleStore<IdentityRole>(context.Get<DataContext>()));
+
+            return appRoleManager;
+        }
+    }
+
+
 }
