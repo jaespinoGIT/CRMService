@@ -21,13 +21,14 @@ using CRMService.Helpers;
 using System.ComponentModel;
 using CRMService.Helpers.Filters;
 using CRMService.Core.Exceptions.Services;
+using Microsoft.AspNet.Identity;
 
 namespace CRMService.Controllers
 {
     [ApiVersion("1.0")]
     [Authorize()]
     [RoutePrefix("api/customers")]
-    public class CustomersController : ApiController
+    public class CustomersController : BaseApiController
     {
         private readonly IMapper _mapper;
         private readonly ICustomerService _customerService;
@@ -80,8 +81,8 @@ namespace CRMService.Controllers
             else
             {
                 var customer = _mapper.Map<Customer>(model);
-
-                customer = await _customerService.AddCustomer(customer);
+              
+                customer = await _customerService.AddCustomer(customer, User.Identity.GetUserId());
 
                 if (customer != null)
                 {
@@ -99,12 +100,12 @@ namespace CRMService.Controllers
         public async Task<IHttpActionResult> Put(int customerId, CustomerModel model)
         {
 
-            var customer = await _customerService.GetCustomerAsync(customerId);
+            var customer = await _customerService.GetCustomerForUpdateAsync(customerId);
             if (customer == null)
                 return NotFound();
-            _mapper.Map(model, customer);
+            _mapper.Map(model, customer);         
 
-            var customerUpdated = await _customerService.UpdateCustomer(customer);
+            var customerUpdated = await _customerService.UpdateCustomer(customer, User.Identity.GetUserId());
 
             if (customerUpdated == null)
                 return InternalServerError();
@@ -133,11 +134,12 @@ namespace CRMService.Controllers
             //var imageDataStream = new System.IO.MemoryStream(model.Photo);
             //imageDataStream.Position = 0;
 
-            var customer = await _customerService.GetCustomerAsync(customerId, false);
+            var customer = await _customerService.GetCustomerForUpdateAsync(customerId);
             if (customer == null)
                 return NotFound();
             customer.Photo = model.Photo;
-            var customerUpdated = await _customerService.UpdateCustomer(customer);
+      
+            var customerUpdated = await _customerService.UpdateCustomer(customer, User.Identity.GetUserId());
             if (customerUpdated != null)
                 return Ok(_mapper.Map<CustomerModel>(customerUpdated));
             else
@@ -152,15 +154,15 @@ namespace CRMService.Controllers
             if (patchDoc == null)
                 return BadRequest();
 
-            var customer = await _customerService.GetCustomerAsync(customerId, false);
+            var customer = await _customerService.GetCustomerForUpdateAsync(customerId);
             if (customer == null)
                 return NotFound();
             var customerModelToPatch = _mapper.Map<CustomerModel>(customer);
 
             patchDoc.ApplyTo(customerModelToPatch);
 
-            // Assign entity changes to original entity retrieved from database   
-            var customerUpdated = await _customerService.UpdateCustomer(_mapper.Map(customerModelToPatch, customer));
+            // Assign entity changes to original entity retrieved from database          
+            var customerUpdated = await _customerService.UpdateCustomer(_mapper.Map(customerModelToPatch, customer), User.Identity.GetUserId());
             if (customerUpdated == null)
                 return BadRequest();
             else
@@ -180,12 +182,12 @@ namespace CRMService.Controllers
                 return this.BadRequest("Missing file");
 
             byte[] payload = await fileContents.ReadAsByteArrayAsync();
-            var customer = await _customerService.GetCustomerAsync(customerId);
+            var customer = await _customerService.GetCustomerForUpdateAsync(customerId);
             if (customer == null)
                 return NotFound();
             customer.Photo = payload;
-
-            var customerUpdated = await _customerService.UpdateCustomer(customer);
+         
+            var customerUpdated = await _customerService.UpdateCustomer(customer, User.Identity.GetUserId());
             if (customerUpdated == null)
                 return BadRequest();
             else

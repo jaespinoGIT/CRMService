@@ -4,7 +4,9 @@ using CRMService.Core.Services;
 using CRMService.Core.Services.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using System.Threading.Tasks;
 
 namespace CRMService.Core.UnitTests.Services
@@ -19,6 +21,12 @@ namespace CRMService.Core.UnitTests.Services
                     new Customer() {CustomerId = 3, Name = "C3", Surname="S3"},
                 };
 
+        private CustomerAudit customerAudit = new CustomerAudit()
+        {
+            Date = DateTime.Now,
+            Operation = Domain.Entities.Enums.CustomerAuditOperationType.Update
+        };
+
         private static Mock<ICustomerRepository> customerRepository;
 
         [ClassInitialize]
@@ -26,7 +34,7 @@ namespace CRMService.Core.UnitTests.Services
         {
             customerRepository = new Mock<ICustomerRepository>();
             customerRepository.Setup(x => x.SaveChangesAsync())
-                    .Returns(Task.FromResult(true));
+                    .Returns(Task.FromResult(true));                      
         }
 
         [TestMethod]
@@ -70,10 +78,10 @@ namespace CRMService.Core.UnitTests.Services
         {
             Customer customer = customersList.Find(c => c.CustomerId == customerId);
 
-           
-            customerRepository.Setup(x => x.GetCustomerAsync(customerId, false))
-               .Returns(Task.FromResult(customer));
-          
+
+            customerRepository.Setup(x => x.GetCustomerForUpdateAsync(customer.CustomerId))
+          .Returns(Task.FromResult(customer));
+
             customerRepository.Setup(x => x.DeleteCustomer(customer));
 
             var service = new CustomerService(customerRepository.Object);            
@@ -91,13 +99,14 @@ namespace CRMService.Core.UnitTests.Services
         {
             Customer customer = customersList.Find(c => c.CustomerId == customerId);
           
-            customerRepository.Setup(x => x.GetCustomerByNameAsync(customer.Name, false));            
-           
+            customerRepository.Setup(x => x.GetCustomerByNameAsync(customer.Name, false));
+     
             customerRepository.Setup(x => x.AddCustomer(customer));
+            customerRepository.Setup(x => x.AddCustomerAudit(customerAudit, "1"));
 
             var service = new CustomerService(customerRepository.Object);
 
-            var result = await service.AddCustomer(customer);
+            var result = await service.AddCustomer(customer, "1");
             customerRepository.Verify(r => r.AddCustomer(customer));
 
             Assert.IsNotNull(result);
@@ -108,17 +117,17 @@ namespace CRMService.Core.UnitTests.Services
 
         [TestMethod]
         [DataRow(2)]
-        public async Task UpdaCustomer(int customerId)
+        public async Task UpdateCustomer(int customerId)
         {
             Customer customer = customersList.Find(c => c.CustomerId == customerId);
 
             customerRepository.Setup(x => x.GetCustomerByNameAsync(customer.Name, false));
-
-            
+            customerRepository.Setup(x => x.GetCustomerForUpdateAsync(customer.CustomerId))
+             .Returns(Task.FromResult(customer));
 
             var service = new CustomerService(customerRepository.Object);
 
-            var result = await service.AddCustomer(customer);
+            var result = await service.AddCustomer(customer, "1");
             customerRepository.Verify(r => r.AddCustomer(customer));
 
             Assert.IsNotNull(result);

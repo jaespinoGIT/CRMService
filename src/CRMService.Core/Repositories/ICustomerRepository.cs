@@ -14,15 +14,17 @@ namespace CRMService.Core.Repositories
 
         List<Customer> GetAll();
 
-        Task<bool> SaveChangesAsync();
-
+        Task<bool> SaveChangesAsync(); 
         // Customers
-        void AddCustomer(Customer customer);
+        void AddCustomer(Customer customer);    
+        void AddCustomerAudit(CustomerAudit customerAudit, string userId);
         void DeleteCustomer(Customer customer);
 
         Task<List<Customer>> GetAllCustomersAsync(bool full = false);
         Task<Customer> GetCustomerAsync(int customerId, bool full = false);
         Task<Customer> GetCustomerByNameAsync(string name, bool full = false);
+
+        Task<Customer> GetCustomerForUpdateAsync(int customerId);
 
     }
 }

@@ -52,17 +52,17 @@ namespace CRMService.Data.Migrations
                 Customer customer = new Customer()
                 {
                     Name = "Customer1",
-                    Surname = "Surname1",
-                    CustomerAudits = new CustomerAudit[]
-                    {
-                        new CustomerAudit
-                        {
-                            Date = DateTime.Now,
-                            Operation = 0,
-                            User = adminUser
-                        }
+                    //Surname = "Surname1",
+                    //CustomerAudits = new CustomerAudit[]
+                    //{
+                    //    new CustomerAudit
+                    //    {
+                    //        Date = DateTime.Now,
+                    //        Operation = 0,
+                    //        User = adminUser
+                    //    }
 
-                        }
+                    //    }
 
                 };
 

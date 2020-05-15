@@ -25,7 +25,7 @@ namespace CRMService.Core.Services
 
         public async Task<Customer> GetCustomerAsync(int customerId, bool full = false)
         {
-            return await _customerRepository.GetCustomerAsync(customerId, full); ;
+            return await _customerRepository.GetCustomerAsync(customerId, full);
         }
 
         public async Task<List<Customer>> GetAllCustomersAsync(bool includeCustomerAudits = false)
@@ -35,7 +35,7 @@ namespace CRMService.Core.Services
 
         public async Task<bool> DeleteCustomer(int customerId)
         {
-            var customer = await _customerRepository.GetCustomerAsync(customerId);
+            var customer = await _customerRepository.GetCustomerForUpdateAsync(customerId);
             if (customer == null) _customExceptionService.ThrowItemNotFoundException("Customer doesnt exists");
 
             _customerRepository.DeleteCustomer(customer);
@@ -44,52 +44,64 @@ namespace CRMService.Core.Services
 
         }
 
-        public async Task<Customer> AddCustomer(Customer customer)
+        public async Task<Customer> AddCustomer(Customer customer, string userId)
         {
             if (await _customerRepository.GetCustomerByNameAsync(customer.Name) != null)
             {
                 _customExceptionService.ThrowInvalidOperationException("Name already exists");
-                return null;               
+                return null;
             }
-
-            customer.CustomerAudits = new CustomerAudit[]
-                {
-                        new CustomerAudit
-                        {
-                            Date = DateTime.Now,
-                            Operation = CustomerAuditOperationType.Create,
-                            Customer = customer
-                        }
-                };
 
             _customerRepository.AddCustomer(customer);
 
             if (await _customerRepository.SaveChangesAsync())
-                return customer;
+            {
+                CustomerAudit customerAudit = new CustomerAudit
+                {
+                    Date = DateTime.Now,
+                    Operation = CustomerAuditOperationType.Create,
+                    Customer = customer                  
+                };
+
+                _customerRepository.AddCustomerAudit(customerAudit, userId);
+
+                if (await _customerRepository.SaveChangesAsync())
+                    return customer;
+            }
             else
                 _customExceptionService.ThrowInvalidOperationException("Error adding customer");
 
             return null;
         }
 
-        public async Task<Customer> UpdateCustomer(Customer customer)
+        public async Task<Customer> UpdateCustomer(Customer customer, string userId)
         {
-            //customer.CustomerAudits = new CustomerAudit[]
-            //        {
-            //            new CustomerAudit
-            //            {
-            //                Date = DateTime.Now,
-            //                Operation = CustomerAuditOperationType.Update,
-            //                Customer = customer
-            //            }
-            //        };            
 
             if (await _customerRepository.SaveChangesAsync())
-                return customer;
+            {
+                CustomerAudit customerAudit = new CustomerAudit
+                {
+                    Date = DateTime.Now,
+                    Operation = CustomerAuditOperationType.Update,
+                    Customer = customer                    
+                };
+
+                _customerRepository.AddCustomerAudit(customerAudit, userId);
+
+                if (await _customerRepository.SaveChangesAsync())
+                    return customer;
+            }
             else
-                _customExceptionService.ThrowInvalidOperationException("Error updating user");
+                _customExceptionService.ThrowInvalidOperationException("Error adding customer");
+
 
             return null;
-        }   
+        }
+
+        public async Task<Customer> GetCustomerForUpdateAsync(int customerId)
+        {
+            return await _customerRepository.GetCustomerForUpdateAsync(customerId);
+        }
+
     }
 }
