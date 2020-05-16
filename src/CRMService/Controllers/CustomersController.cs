@@ -22,6 +22,7 @@ using System.ComponentModel;
 using CRMService.Helpers.Filters;
 using CRMService.Core.Exceptions.Services;
 using Microsoft.AspNet.Identity;
+using System.Net.Http.Headers;
 
 namespace CRMService.Controllers
 {
@@ -81,7 +82,7 @@ namespace CRMService.Controllers
             else
             {
                 var customer = _mapper.Map<Customer>(model);
-              
+
                 customer = await _customerService.AddCustomer(customer, User.Identity.GetUserId());
 
                 if (customer != null)
@@ -122,55 +123,10 @@ namespace CRMService.Controllers
             else
                 return InternalServerError();
         }
-        [NonAction]
-        [Route("{customerId}/photo")]
+
+
         [HttpPut]
-        public async Task<IHttpActionResult> UploadCustomerImage(int customerId, [FromBody] UploadCustomerPhotoModel model)
-        {
-            if (model == null || model.Photo == null)
-                return BadRequest();
-
-            //When creating a stream, you need to reset the position, without it you will see that you always write files with a 0 byte length. 
-            //var imageDataStream = new System.IO.MemoryStream(model.Photo);
-            //imageDataStream.Position = 0;
-
-            var customer = await _customerService.GetCustomerForUpdateAsync(customerId);
-            if (customer == null)
-                return NotFound();
-            customer.Photo = model.Photo;
-      
-            var customerUpdated = await _customerService.UpdateCustomer(customer, User.Identity.GetUserId());
-            if (customerUpdated != null)
-                return Ok(_mapper.Map<CustomerModel>(customerUpdated));
-            else
-                return InternalServerError();
-        }
-        [NonAction]
         [Route("{customerId}/photo")]
-        [HttpPatch]
-        public async Task<IHttpActionResult> UploadCustomerPhoto(int customerId, [FromBody] JsonPatchDocument<CustomerModel> patchDoc)
-        {
-            // If the received data is null
-            if (patchDoc == null)
-                return BadRequest();
-
-            var customer = await _customerService.GetCustomerForUpdateAsync(customerId);
-            if (customer == null)
-                return NotFound();
-            var customerModelToPatch = _mapper.Map<CustomerModel>(customer);
-
-            patchDoc.ApplyTo(customerModelToPatch);
-
-            // Assign entity changes to original entity retrieved from database          
-            var customerUpdated = await _customerService.UpdateCustomer(_mapper.Map(customerModelToPatch, customer), User.Identity.GetUserId());
-            if (customerUpdated == null)
-                return BadRequest();
-            else
-                return Ok(_mapper.Map<CustomerModel>(customerUpdated));
-        }
-
-        [HttpPatch]
-        [Route("{customerId}/upload")]
         public async Task<IHttpActionResult> UploadPhotoFile(int customerId)
         {
             if (!Request.Content.IsMimeMultipartContent())
@@ -192,6 +148,19 @@ namespace CRMService.Controllers
                 return BadRequest();
             else
                 return Ok(_mapper.Map<CustomerModel>(customerUpdated));
+        }
+                
+        [Route("{customerId}/photo")]
+        public async Task<HttpResponseMessage> Get(int customerId)
+        {
+            HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+            var customer = await _customerService.GetCustomerAsync(customerId, true);
+            if (customer == null || customer.Photo == null)
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+
+            result.Content = new ByteArrayContent(customer.Photo);
+            result.Content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+            return result;
         }
     }
 }
