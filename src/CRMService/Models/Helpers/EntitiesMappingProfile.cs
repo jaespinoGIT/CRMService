@@ -15,7 +15,8 @@ namespace CRMService.Models
         {
             CreateMap<Customer, CustomerModel>()
                     .ReverseMap().ForMember(um => um.CustomerId, opt => opt.Ignore())
-                    .ForMember(um => um.CustomerAudits, opt => opt.Ignore());
+                    .ForMember(um => um.CustomerAudits, opt => opt.Ignore())
+                    .ForMember(um => um.Photo, opt => opt.Ignore());
 
             CreateMap<CustomerAudit, CustomerAuditModel>()
                 .ReverseMap();
