@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Results;
-using AutoMapper;
+﻿using AutoMapper;
 using CRMService.Controllers;
 using CRMService.Core.Domain.Entities;
 using CRMService.Core.Repositories;
@@ -13,6 +7,11 @@ using CRMService.Models;
 using FakeItEasy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MockQueryable.FakeItEasy;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Http;
+using System.Web.Http.Results;
 
 namespace CRMService.UnitTests.Controllers
 {
@@ -49,8 +48,22 @@ namespace CRMService.UnitTests.Controllers
 
                 var contentResult = httpActionResult as OkNegotiatedContentResult<IEnumerable<CustomerModel>>;
 
-                Assert.AreEqual(customers.Count(), contentResult.Content.Count());                             
-         
+                Assert.AreEqual(customers.Count(), contentResult.Content.Count());
+
+            //var userMock = new Mock<IPrincipal>();
+            //userMock.Setup(p => p.IsInRole("admin")).Returns(true);
+            //userMock.SetupGet(p => p.Identity.Name).Returns("tester");
+            //userMock.SetupGet(p => p.Identity.IsAuthenticated).Returns(true);
+
+            //var requestContext = new Mock<HttpRequestContext>();
+            //requestContext.Setup(x => x.Principal).Returns(userMock.Object);
+
+            //var controller = new UsersController()
+            //{
+            //    RequestContext = requestContext.Object,
+            //    Request = new HttpRequestMessage(),
+            //    Configuration = new HttpConfiguration()
+            //};
         }
     }
 }

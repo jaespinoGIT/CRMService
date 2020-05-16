@@ -22,6 +22,7 @@ using System.ComponentModel;
 using CRMService.Helpers.Filters;
 using CRMService.Core.Exceptions.Services;
 using Microsoft.AspNet.Identity;
+using System.Net.Http.Headers;
 
 namespace CRMService.Controllers
 {
@@ -169,8 +170,8 @@ namespace CRMService.Controllers
                 return Ok(_mapper.Map<CustomerModel>(customerUpdated));
         }
 
-        [HttpPatch]
-        [Route("{customerId}/upload")]
+        [HttpPut]
+        [Route("{customerId}/photo")]
         public async Task<IHttpActionResult> UploadPhotoFile(int customerId)
         {
             if (!Request.Content.IsMimeMultipartContent())
@@ -192,6 +193,19 @@ namespace CRMService.Controllers
                 return BadRequest();
             else
                 return Ok(_mapper.Map<CustomerModel>(customerUpdated));
+        }
+                
+        [Route("{customerId}/photo")]
+        public async Task<HttpResponseMessage> Get(int customerId)
+        {
+            HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+            var customer = await _customerService.GetCustomerAsync(customerId, true);
+            if (customer == null || customer.Photo == null)
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+
+            result.Content = new ByteArrayContent(customer.Photo);
+            result.Content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+            return result;
         }
     }
 }
