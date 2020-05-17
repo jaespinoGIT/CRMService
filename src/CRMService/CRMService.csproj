@@ -330,6 +330,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\Filters\ClaimsAuthorizationAttribute.cs" />
+    <Compile Include="Helpers\CustomExtensions\GetOwinContext.cs" />
     <Compile Include="Helpers\Providers\CustomJwtFormat.cs" />
     <Compile Include="Helpers\Providers\CustomOAuthProvider.cs" />
     <Compile Include="Helpers\Filters\ItemNotFoundExceptionFilter.cs" />
@@ -344,9 +345,10 @@
     <Compile Include="Models\Binding\RoleBindingModels.cs" />
     <Compile Include="Models\CustomerAuditModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
-    <Compile Include="Helpers\Providers\ExtendedClaimsProvider.cs" />
-    <Compile Include="Helpers\Providers\RolesFromClaims.cs" />
+    <Compile Include="Helpers\CustomExtensions\ExtendedClaimsProvider.cs" />
+    <Compile Include="Helpers\CustomExtensions\RolesFromClaims.cs" />
     <Compile Include="Models\Helpers\EntitiesMappingProfile.cs" />
+    <Compile Include="Models\Helpers\IModelFactory.cs" />
     <Compile Include="Models\Helpers\ModelFactory.cs" />
     <Compile Include="Models\RoleModel.cs" />
     <Compile Include="Models\UserModel.cs" />
@@ -359,6 +361,8 @@
       <DependentUpon>Dockerfile</DependentUpon>
     </None>
     <None Include="packages.config" />
+    <None Include="Properties\PublishProfiles\CRMService20200516192107.pubxml" />
+    <None Include="Properties\PublishProfiles\CRMService202005161921071.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

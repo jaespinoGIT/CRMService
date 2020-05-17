@@ -1,12 +1,12 @@
 ﻿using CRMService.Core.Domain.Entities;
-
+using CRMService.Models.Helpers;
 using Microsoft.AspNet.Identity.EntityFramework;
 
 using System.Web.Http.Routing;
 
 namespace CRMService.Models
 {
-    public class ModelFactory
+    public class ModelFactory : IModelFactory
     {
 
         private UrlHelper _UrlHelper;

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.Claims;
 
-namespace CRMService.Helpers.Auth
+namespace CRMService.Helpers.CustomExtensions
 {
     public class RolesFromClaims
     {
@@ -21,5 +21,6 @@ namespace CRMService.Helpers.Auth
 
             return claims;
         }
+
     }
 }

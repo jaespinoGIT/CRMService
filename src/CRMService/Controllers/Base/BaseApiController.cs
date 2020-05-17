@@ -6,38 +6,49 @@ using System.Web;
 
 using System.Net.Http;
 using System.Web.Http;
-
+using CRMService.Models.Helpers;
 
 namespace CRMService.Controllers
 {
     public class BaseApiController : ApiController
     {
 
-        private ModelFactory _modelFactory;
-        private ApplicationUserManager _AppUserManager = null;
-        private ApplicationRoleManager _AppRoleManager = null;
+        private IModelFactory _modelFactory;
+        private ApplicationUserManager _appUserManager = null;
+        private ApplicationRoleManager _appRoleManager = null;
 
-        protected ApplicationUserManager AppUserManager
+        public ApplicationUserManager AppUserManager
         {
             get
             {
-                return _AppUserManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                return _appUserManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            set //public for tests only
+
+            {
+                _appUserManager = value;
             }
         }
 
-        protected ApplicationRoleManager AppRoleManager
+        public ApplicationRoleManager AppRoleManager
         {
             get
             {
-                return _AppRoleManager ?? Request.GetOwinContext().GetUserManager<ApplicationRoleManager>();
+                return _appRoleManager ?? Request.GetOwinContext().GetUserManager<ApplicationRoleManager>();
+            }
+            set //public for tests only
+
+            {
+                _appRoleManager = value;
             }
         }
 
         public BaseApiController()
         {
-        }
 
-        protected ModelFactory TheModelFactory
+        }    
+
+        public IModelFactory TheModelFactory
         {
             get
             {
@@ -46,6 +57,10 @@ namespace CRMService.Controllers
                     _modelFactory = new ModelFactory(this.Request, this.AppUserManager);
                 }
                 return _modelFactory;
+            }
+            set //public for tests only
+            {
+                _modelFactory = value;
             }
         }
 

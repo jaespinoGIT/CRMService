@@ -70,21 +70,6 @@ namespace CRMService.UnitTests.Controllers
                 Assert.AreEqual(customersList.Count(), contentResult.Content.Count());
                 var mappedResult = _mapper.Map<IEnumerable<CustomerModel>>(contentResult.Content);
                 Assert.IsNotNull(mappedResult);
-
-            //var userMock = new Mock<IPrincipal>();
-            //userMock.Setup(p => p.IsInRole("admin")).Returns(true);
-            //userMock.SetupGet(p => p.Identity.Name).Returns("tester");
-            //userMock.SetupGet(p => p.Identity.IsAuthenticated).Returns(true);
-
-            //var requestContext = new Mock<HttpRequestContext>();
-            //requestContext.Setup(x => x.Principal).Returns(userMock.Object);
-
-            //var controller = new UsersController()
-            //{
-            //    RequestContext = requestContext.Object,
-            //    Request = new HttpRequestMessage(),
-            //    Configuration = new HttpConfiguration()
-            //};
         }
 
         [TestMethod]
