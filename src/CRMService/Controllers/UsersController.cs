@@ -1,6 +1,7 @@
 ﻿
 using CRMService.Core.Domain.Entities;
 using CRMService.Helpers.Auth;
+using CRMService.Helpers.CustomExtensions;
 using CRMService.Models.Binding;
 
 using Microsoft.AspNet.Identity;
