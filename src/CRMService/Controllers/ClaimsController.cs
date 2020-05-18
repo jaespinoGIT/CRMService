@@ -9,11 +9,22 @@ using System.Web.Http;
 
 namespace CRMService.Controllers
 {
+    /// <summary>
+    /// Claims related ontroller
+    /// </summary>
+    [Authorize]
     [RoutePrefix("api/claims")]
     [ApiVersion("1.0")]
     public class ClaimsController : BaseApiController
-    {
-        [Authorize]       
+    {       /// GET: api/claims
+            /// <summary>
+            /// Gets all claims of current user.
+            /// </summary>
+            /// <remarks>
+            /// Gets all claims of current user.
+            /// </remarks>       
+            /// <response code="401">Unauthorized. Incorrect or inexistent jwt token or not enough permissions.</response>              
+            /// <response code="200">OK. Response user claims.</response>          
         public IHttpActionResult GetClaims()
         {
             var identity = User.Identity as ClaimsIdentity;

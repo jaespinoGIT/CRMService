@@ -11,6 +11,9 @@ using Thinktecture.IdentityModel.Tokens;
 
 namespace CRMService.Helpers.Providers
 {
+    /// <summary>
+    /// Format of the jwt token
+    /// </summary>
     public class CustomJwtFormat : ISecureDataFormat<AuthenticationTicket>
     {
 
@@ -27,7 +30,7 @@ namespace CRMService.Helpers.Providers
             {
                 throw new ArgumentNullException("data");
             }
-
+            //Audience and secret for the authentication server
             string audienceId = ConfigurationManager.AppSettings["as:AudienceId"];
 
             string symmetricKeyAsBase64 = ConfigurationManager.AppSettings["as:AudienceSecret"];

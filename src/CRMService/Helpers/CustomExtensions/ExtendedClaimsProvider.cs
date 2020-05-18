@@ -8,6 +8,9 @@ using CRMService.Core.Domain.Entities;
 
 namespace CRMService.Helpers.CustomExtensions
 {
+    /// <summary>
+    /// Expands claims options
+    /// </summary>
     public class ExtendedClaimsProvider
     {
         public static IEnumerable<Claim> GetClaims(User user)

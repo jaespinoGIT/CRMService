@@ -53,7 +53,7 @@ namespace CRMService.Core.Services
             }
 
             _customerRepository.AddCustomer(customer);
-
+            //Add registry operation
             if (await _customerRepository.SaveChangesAsync())
             {
                 CustomerAudit customerAudit = new CustomerAudit
@@ -85,7 +85,7 @@ namespace CRMService.Core.Services
                     Operation = CustomerAuditOperationType.Update,
                     Customer = customer                    
                 };
-
+                //Add registry operation
                 _customerRepository.AddCustomerAudit(customerAudit, userId);
 
                 if (await _customerRepository.SaveChangesAsync())

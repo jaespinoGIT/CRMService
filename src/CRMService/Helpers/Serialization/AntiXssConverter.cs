@@ -9,6 +9,9 @@ using System.Web.Security.AntiXss;
 
 namespace CRMService.Helpers.Serialization
 {
+    /// <summary>
+    /// Xss protection 
+    /// </summary>
     public class AntiXssConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
@@ -43,7 +46,9 @@ namespace CRMService.Helpers.Serialization
             }
         }
     }
-
+    /// <summary>
+    /// "NoConverter" class which would default to using the default converter for specific properties, pe passwords
+    /// </summary>
     public class NoConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)

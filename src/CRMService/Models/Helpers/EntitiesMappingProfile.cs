@@ -9,6 +9,9 @@ using CRMService.Core.Domain.Entities;
 
 namespace CRMService.Models
 {
+    /// <summary>
+    /// Automapper configuration for customer, user and customeraudit
+    /// </summary>
     public class EntitiesMappingProfile : Profile
     {
         public EntitiesMappingProfile()

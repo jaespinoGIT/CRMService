@@ -9,6 +9,9 @@ using System.Web.Http;
 
 namespace CRMService
 {
+    /// <summary>
+    /// Autofac dependency inyection configuration
+    /// </summary>
     public class AutofacConfig
     {
         public static void Register()
@@ -33,7 +36,7 @@ namespace CRMService
             bldr.RegisterInstance(config.CreateMapper())
             .As<IMapper>()
             .SingleInstance();
-
+            //Register core and infracstructure dependencies
             bldr.RegisterModule(new CoreModule());
             bldr.RegisterModule(new InfrastructureModule());      
 

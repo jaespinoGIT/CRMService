@@ -13,6 +13,9 @@ using System.Web.Http.ExceptionHandling;
 
 namespace CRMService.Helpers
 {
+    /// <summary>
+    /// All not handled exceptions are controlled here
+    /// </summary>
     public class GlobalExceptionHandler : ExceptionHandler
     {
         public override void Handle(ExceptionHandlerContext context)

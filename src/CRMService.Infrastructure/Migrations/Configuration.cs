@@ -17,7 +17,10 @@ namespace CRMService.Data.Migrations
             AutomaticMigrationsEnabled = false;
             ContextKey = "CRMService.Infrastructure.DataContext";
         }
-
+        /// <summary>
+        /// Fill the database with the initial data
+        /// </summary>
+        /// <param name="ctx"></param>
         protected override void Seed(DataContext ctx)
         {
             var manager = new UserManager<User>(new UserStore<User>(ctx));
@@ -33,7 +36,7 @@ namespace CRMService.Data.Migrations
                 LastName = "Espino"
             };
 
-            manager.Create(user, "MySuperP@ss!");
+            manager.Create(user, "&vU$8j8MDzyj3o");
 
             if (roleManager.Roles.Count() == 0)
             {
@@ -45,29 +48,6 @@ namespace CRMService.Data.Migrations
             var adminUser = manager.FindByName("SuperPowerUser");
 
             manager.AddToRoles(adminUser.Id, new string[] { "SuperAdmin", "Admin" });
-
-
-            if (!ctx.Customers.Any())
-            {
-                Customer customer = new Customer()
-                {
-                    Name = "Customer1",
-                    //Surname = "Surname1",
-                    //CustomerAudits = new CustomerAudit[]
-                    //{
-                    //    new CustomerAudit
-                    //    {
-                    //        Date = DateTime.Now,
-                    //        Operation = 0,
-                    //        User = adminUser
-                    //    }
-
-                    //    }
-
-                };
-
-                ctx.Customers.Add(customer);
-            }
 
             base.Seed(ctx);
 

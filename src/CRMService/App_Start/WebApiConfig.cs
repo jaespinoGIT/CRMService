@@ -43,7 +43,7 @@ namespace CRMService
             //Api versioning
             config.AddApiVersioning(cfg =>
             {
-                cfg.DefaultApiVersion = new Microsoft.Web.Http.ApiVersion(1, 1);
+                cfg.DefaultApiVersion = new Microsoft.Web.Http.ApiVersion(1, 0);
                 cfg.AssumeDefaultVersionWhenUnspecified = true;
                 cfg.ReportApiVersions = true;
                 cfg.ApiVersionReader = ApiVersionReader.Combine(new HeaderApiVersionReader("X-Version"));
@@ -57,7 +57,7 @@ namespace CRMService
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            //WebApiThrottle
+            //WebApiThrottle, brute force protection
             config.MessageHandlers.Add(new ThrottlingHandler()
             {
                 Policy = new ThrottlePolicy(perSecond: 5, perMinute: 30)

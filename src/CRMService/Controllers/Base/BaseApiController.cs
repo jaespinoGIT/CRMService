@@ -43,7 +43,7 @@ namespace CRMService.Controllers
             }
         }
 
-        public BaseApiController()
+        internal BaseApiController()
         {
 
         }    
@@ -64,7 +64,7 @@ namespace CRMService.Controllers
             }
         }
 
-        protected IHttpActionResult GetErrorResult(IdentityResult result)
+        internal IHttpActionResult GetErrorResult(IdentityResult result)
         {
             if (result == null)
             {

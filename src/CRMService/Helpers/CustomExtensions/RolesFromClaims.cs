@@ -9,6 +9,11 @@ namespace CRMService.Helpers.CustomExtensions
 {
     public class RolesFromClaims
     {
+        /// <summary>
+        /// Adds new claims based on roles and another claims
+        /// </summary>
+        /// <param name="identity"></param>
+        /// <returns></returns>
         public static IEnumerable<Claim> CreateRolesBasedOnClaims(ClaimsIdentity identity)
         {
             List<Claim> claims = new List<Claim>();

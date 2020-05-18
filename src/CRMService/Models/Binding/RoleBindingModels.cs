@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace CRMService.Models.Binding
 {
+    /// <summary>
+    /// Model of the new role
+    /// </summary>
     public class CreateRoleBindingModel
     {
 

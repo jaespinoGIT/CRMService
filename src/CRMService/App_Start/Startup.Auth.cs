@@ -38,6 +38,7 @@ namespace CRMService
                 TokenEndpointPath = new PathString("/oauth/token"),
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(1),
                 Provider = new CustomOAuthProvider(),
+                //Auth server
                 AccessTokenFormat = new CustomJwtFormat("https://localhost:44300/")
             };
 
@@ -49,6 +50,7 @@ namespace CRMService
         {
 
             var issuer = "https://localhost:44300/";
+            //Audience and secret of the authentication server
             string audienceId = ConfigurationManager.AppSettings["as:AudienceId"];
             byte[] audienceSecret = TextEncodings.Base64Url.Decode(ConfigurationManager.AppSettings["as:AudienceSecret"]);
 

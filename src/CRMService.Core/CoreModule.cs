@@ -12,6 +12,7 @@ namespace CRMService.Core
 {
     public class CoreModule : Module
     {
+        //Autofac configuration
         protected override void Load(ContainerBuilder bldr)
         {        
 

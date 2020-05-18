@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace CRMService.Helpers.Auth
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class CustomOAuthProvider : OAuthAuthorizationServerProvider
     {
 

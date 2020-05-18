@@ -17,7 +17,11 @@ namespace CRMService.Models
             _UrlHelper = new UrlHelper(request);
             _AppUserManager = appUserManager;
         }
-
+        /// <summary>
+        /// Maps entity user to UserModel
+        /// </summary>
+        /// <param name="appUser"></param>
+        /// <returns></returns>
         public UserModel Create(User appUser)
         {
             return new UserModel

@@ -9,8 +9,12 @@ using System.Web;
 
 namespace CRMService.Helpers.CustomExtensions
 {
+
     public static class OwinContextExtension
     {
+        /// <summary>
+        /// Extension method created for tests
+        /// </summary>
         public static IOwinContext GetOwinContext(this HttpRequestMessage request)
         {
             var context = request.Properties["MS_HttpContext"] as HttpContextWrapper;
