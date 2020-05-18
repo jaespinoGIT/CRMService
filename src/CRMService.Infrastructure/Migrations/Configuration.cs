@@ -32,8 +32,8 @@ namespace CRMService.Data.Migrations
                 UserName = "SuperPowerUser",
                 Email = "examplemail@gmail.com",
                 EmailConfirmed = true,
-                FirstName = "Jose",
-                LastName = "Espino"
+                FirstName = "User",
+                LastName = "LastName"
             };
 
             manager.Create(user, "&vU$8j8MDzyj3o");
