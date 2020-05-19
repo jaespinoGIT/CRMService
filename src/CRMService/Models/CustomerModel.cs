@@ -5,6 +5,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CRMService.Models
 {
+    /// <summary>
+    /// Model that represents customer data
+    /// </summary>
     public class CustomerModel
     {       
         public int CustomerId { get; set; }

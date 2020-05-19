@@ -13,21 +13,40 @@ using System.Web.Http;
 
 namespace CRMService.Controllers
 {
+    /// <summary>
+    /// User operations controller, only admins
+    /// </summary>
     [Authorize(Roles = "Admin")]
     [ApiVersion("1.0")]
     [RoutePrefix("api/users")]    
     public class UsersController : BaseApiController
-    { 
-
+    {
+        /// GET: api/users
+        /// <summary>
+        /// Gets all registered users.
+        /// </summary>
+        /// <remarks>
+        /// Gets all registered users.
+        /// </remarks>       
+        /// <response code="401">Unauthorized. Incorrect or inexistent jwt token or not enough permissions.</response>              
+        /// <response code="200">OK. Response users list.</response>  
         [Route()]
         public async Task<IHttpActionResult> Get()
-        {          
-            var identity = User.Identity as System.Security.Claims.ClaimsIdentity;
-
+        {   
             return Ok(this.AppUserManager.Users.ToList().Select(u => this.TheModelFactory.Create(u)));
-
         }
 
+        /// GET: api/users/{userId}
+        /// <summary>
+        /// Gets an user by id.
+        /// </summary>
+        /// <remarks>
+        /// Gets all data of an user.
+        /// </remarks>  
+        /// <param name="userId">Id (GUID) of the user.</param>
+        /// <response code="401">Unauthorized. Incorrect or inexistent jwt token or not enough permissions.</response>              
+        /// <response code="200">OK. Response user.</response>  
+        /// <response code="404">NotFound. User not found.</response>
         [Route("{userId}", Name = "GetUserById")]
         public async Task<IHttpActionResult> Get(string userId)
         {
@@ -41,7 +60,17 @@ namespace CRMService.Controllers
 
             return NotFound();
         }
-
+        /// GET: api/users/user/{userName}
+        /// <summary>
+        /// Gets an user by username.
+        /// </summary>
+        /// <remarks>
+        /// Gets all data of an user.
+        /// </remarks> 
+        /// <param name="username">Id (GUID) of the user.</param>
+        /// <response code="401">Unauthorized. Incorrect or inexistent jwt token or not enough permissions.</response>              
+        /// <response code="200">OK. Response user.</response>  
+        /// <response code="404">NotFound. User not found.</response>
         [Route("user/{username}")]
         public async Task<IHttpActionResult> GetUserByName(string username)
         {
@@ -57,7 +86,18 @@ namespace CRMService.Controllers
 
         }
 
-
+        /// POST: api/users
+        /// <summary>
+        /// Add a new user
+        /// </summary>
+        /// <remarks>
+        /// Add a new user to the db
+        /// </remarks>
+        /// <param name="createUserModel"> User to be created.</param>
+        /// <response code="401">Unauthorized. Incorrect or inexistent jwt token or not enough permissions.</response>                            
+        /// <response code="201">Created. User created.</response>        
+        /// <response code="400">BadRequest. Wrong object format.  .</response>
+        /// <response code="409">Conflict. There is an user already in the db.</response>
         [Route()]
         public async Task<IHttpActionResult> Post(CreateUserBindingModel createUserModel)
         {
@@ -83,8 +123,19 @@ namespace CRMService.Controllers
 
             return CreatedAtRoute("GetUserById", new { userId = newModel.Id }, newModel);
         }
-               
-        [Route("ChangePassword")]
+
+        /// PUT: api/users/ChangePassword
+        /// <summary>
+        /// Change the password of the current user
+        /// </summary>
+        /// <remarks>
+        /// Change the password of the current user
+        /// </remarks>     
+        /// <param name="model"> Old and new password.</param>
+        /// <response code="401">Unauthorized. Incorrect or inexistent jwt token or not enough permissions.</response>              
+        /// <response code="200">OK. Password changed</response>         
+        /// <response code="400">BadRequest. Wrong object format.</response>
+        [Route("user/ChangePassword")]
         [HttpPut]
         public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
         {
@@ -102,13 +153,22 @@ namespace CRMService.Controllers
 
             return Ok();
         }
-              
-        [Route("{id:guid}")]
-        public async Task<IHttpActionResult> Delete(string id)
-        {
-           
 
-            var appUser = await this.AppUserManager.FindByIdAsync(id);
+        /// DELETE: api/users/{userId}
+        /// <summary>
+        /// Delete user by id
+        /// </summary>
+        /// <remarks>
+        /// Delete user by id
+        /// </remarks> 
+        /// <param name="userId">Id (GUID) of the user.</param>
+        /// <response code="401">Unauthorized. Incorrect or inexistent jwt token or not enough permissions.</response>              
+        /// <response code="200">OK. User deleted.</response>  
+        /// <response code="404">NotFound. User not found.</response>
+        [Route("{id:guid}")]
+        public async Task<IHttpActionResult> Delete(string userId)
+        {      
+            var appUser = await this.AppUserManager.FindByIdAsync(userId);
 
             if (appUser != null)
             {
@@ -120,14 +180,24 @@ namespace CRMService.Controllers
                 }
 
                 return Ok();
-
             }
 
             return NotFound();
-
         }
 
-       
+        /// PUT:  api/users/{userId}/roles
+        /// <summary>
+        /// Assign new role to the user.
+        /// </summary>
+        /// <remarks>
+        /// Assign new role to the user.
+        /// </remarks> 
+        /// <param name="id">Id (GUID) of the user.</param>
+        /// <param name="rolesToAssign">List (string) of new roles.</param>
+        /// <response code="401">Unauthorized. Incorrect or inexistent jwt token or not enough permissions.</response>              
+        /// <response code="200">OK. Roles assigned.</response>  
+        /// <response code="404">NotFound. User not found.</response>
+        /// <response code="400">BadRequest. Roles doesnt exist.</response>
         [Route("{id:guid}/roles")]
         [HttpPut]
         public async Task<IHttpActionResult> AssignRolesToUser([FromUri] string id, [FromBody] string[] rolesToAssign)
@@ -170,7 +240,19 @@ namespace CRMService.Controllers
             return Ok();
 
         }
-       
+        /// PUT:  api/users/{userId}/assignclaims
+        /// <summary>
+        /// Assign new claims to the user.
+        /// </summary>
+        /// <remarks>
+        /// Assign new claims and remove old claims to the user.
+        /// </remarks> 
+        /// <param name="id">Id (GUID) of the user.</param>
+        /// <param name="claimsToAssign">List (ClaimBindingModel) of new claims.</param>
+        /// <response code="401">Unauthorized. Incorrect or inexistent jwt token or not enough permissions.</response>              
+        /// <response code="200">OK. Claims assigned.</response>  
+        /// <response code="404">NotFound. User not found.</response>
+        /// <response code="400">BadRequest. Wrong object format.</response>
         [Route("{id:guid}/assignclaims")]
         [HttpPut]
         public async Task<IHttpActionResult> AssignClaimsToUser([FromUri] string id, [FromBody] List<ClaimBindingModel> claimsToAssign)
@@ -201,7 +283,19 @@ namespace CRMService.Controllers
 
             return Ok();
         }
-                
+        /// PUT:  api/users/{userId}/removeclaims
+        /// <summary>
+        /// Remove old claims to the user.
+        /// </summary>
+        /// <remarks>
+        /// Remove old claims to the user.
+        /// </remarks> 
+        /// <param name="id">Id (GUID) of the user.</param>
+        /// <param name="claimsToRemove">List (ClaimBindingModel) of new claims.</param>
+        /// <response code="401">Unauthorized. Incorrect or inexistent jwt token or not enough permissions.</response>              
+        /// <response code="200">OK. Claims removed.</response>  
+        /// <response code="404">NotFound. User not found.</response>
+        /// <response code="400">BadRequest. Wrong object format.</response>
         [Route("{id:guid}/removeclaims")]
         [HttpPut]
         public async Task<IHttpActionResult> RemoveClaimsFromUser([FromUri] string id, [FromBody] List<ClaimBindingModel> claimsToRemove)

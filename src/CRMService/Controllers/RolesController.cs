@@ -9,12 +9,25 @@ using System.Web.Http;
 
 namespace CRMService.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    /// <summary>
+    /// Roles operations controller, only admins
+    /// </summary>   
     [ApiVersion("1.0")]
     [RoutePrefix("api/roles")]
     public class RolesController : BaseApiController
     {
-
+        /// GET: api/roles/{roleId}
+        /// <summary>
+        /// Gets an role by id.
+        /// </summary>
+        /// <remarks>
+        /// Gets all data of an role.
+        /// </remarks>  
+        /// <param name="roleId">Id (GUID) of the role.</param>
+        /// <response code="401">Unauthorized. Incorrect or inexistent jwt token or not enough permissions.</response>              
+        /// <response code="200">OK. Response role.</response>  
+        /// <response code="404">NotFound. User not found.</response>
+        [Authorize(Roles = "Admin")]
         [Route("{roleId:guid}", Name = "GetRoleById")]
         public async Task<IHttpActionResult> GetRole(string roleId)
         {
@@ -25,7 +38,16 @@ namespace CRMService.Controllers
 
             return NotFound();
         }
-
+        /// GET: api/roles
+        /// <summary>
+        /// Gets all registered roles.
+        /// </summary>
+        /// <remarks>
+        /// Gets all registered roles.
+        /// </remarks>       
+        /// <response code="401">Unauthorized. Incorrect or inexistent jwt token or not enough permissions.</response>              
+        /// <response code="200">OK. Response roles list.</response>  
+        [Authorize(Roles = "Admin")]
         [Route()]       
         public async Task<IHttpActionResult> Get()
         {
@@ -33,7 +55,19 @@ namespace CRMService.Controllers
 
             return Ok(roles);
         }
-
+        /// POST: api/roles
+        /// <summary>
+        /// Add a new role
+        /// </summary>
+        /// <remarks>
+        /// Add a new role to the db
+        /// </remarks>
+        /// <param name="model"> Role to be created.</param>
+        /// <response code="401">Unauthorized. Incorrect or inexistent jwt token or not enough permissions.</response>                            
+        /// <response code="201">Created. Role created.</response>        
+        /// <response code="400">BadRequest. Wrong object format.  .</response>
+        /// <response code="409">Conflict. There is an role already in the db.</response>
+        [Authorize(Roles = "SuperAdmin")]
         [Route()]
         public async Task<IHttpActionResult> Post(CreateRoleBindingModel model)
         {
@@ -51,7 +85,18 @@ namespace CRMService.Controllers
 
             return CreatedAtRoute("GetRoleById", new { roleId = role.Id }, TheModelFactory.Create(role));  
         }
-
+        /// DELETE: api/roles/{roleId}
+        /// <summary>
+        /// Delete role by id
+        /// </summary>
+        /// <remarks>
+        /// Delete role by id
+        /// </remarks> 
+        /// <param name="roleId">Id (GUID) of the role.</param>
+        /// <response code="401">Unauthorized. Incorrect or inexistent jwt token or not enough permissions.</response>              
+        /// <response code="200">OK. Role deleted.</response>  
+        /// <response code="404">NotFound. User not found.</response>
+        [Authorize(Roles = "SuperAdmin")]
         [Route("{roleId:guid}")]
         public async Task<IHttpActionResult> DeleteRole(string roleId)
         {
@@ -73,7 +118,18 @@ namespace CRMService.Controllers
             return NotFound();
 
         }
-
+        /// GET: api/roles/ManageUsersInRole
+        /// <summary>
+        /// Adds users to roles
+        /// </summary>
+        /// <remarks>
+        /// Adds and delete users of roles
+        /// </remarks>  
+        /// <param name="model">Id (GUID) of the role.</param>
+        /// <response code="401">Unauthorized. Incorrect or inexistent jwt token or not enough permissions.</response>              
+        /// <response code="200">OK. </response>  
+        /// <response code="404">NotFound. User not found.</response>
+        [Authorize(Roles = "Admin")]
         [Route("ManageUsersInRole")]
         public async Task<IHttpActionResult> ManageUsersInRole(UsersInRoleModel model)
         {

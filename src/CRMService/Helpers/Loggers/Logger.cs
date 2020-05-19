@@ -6,6 +6,9 @@ using Serilog.Events;
 
 namespace CRMService.Helpers.Loggers
 {
+    /// <summary>
+    /// Serilog configuration, writes log on file
+    /// </summary>
     public static class Logger
     {
         private static readonly ILogger _errorLogger;

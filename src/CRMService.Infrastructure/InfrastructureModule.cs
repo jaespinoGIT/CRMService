@@ -13,8 +13,8 @@ using CRMService.Infrastructure.Data.EntityFramework.Repositories;
 namespace CRMService.Infrastructure
 {
     public class InfrastructureModule : Module
-    {      
-
+    {
+        //Autofac configuration
         protected override void Load(ContainerBuilder bldr)
         {
             bldr.RegisterType<DataContext>()
