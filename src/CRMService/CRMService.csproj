@@ -349,7 +349,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\Filters\AuthorizationHeaderParameterOperationFilter.cs" />
     <Compile Include="Helpers\Filters\ClaimsAuthorizationAttribute.cs" />
     <Compile Include="Helpers\CustomExtensions\GetOwinContext.cs" />
     <Compile Include="Helpers\Providers\CustomJwtFormat.cs" />
@@ -384,6 +383,8 @@
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\CRMService20200516192107.pubxml" />
     <None Include="Properties\PublishProfiles\CRMService202005161921071.pubxml" />
+    <None Include="Properties\PublishProfiles\CRMServiceGitHub20200519162001 - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\CRMServiceGitHub20200519163450.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
