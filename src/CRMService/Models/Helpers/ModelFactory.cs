@@ -9,13 +9,13 @@ namespace CRMService.Models
     public class ModelFactory : IModelFactory
     {
 
-        private UrlHelper _UrlHelper;
-        private ApplicationUserManager _AppUserManager;
+        private UrlHelper _urlHelper;
+        private ApplicationUserManager _appUserManager;
 
         public ModelFactory(System.Net.Http.HttpRequestMessage request, ApplicationUserManager appUserManager)
         {
-            _UrlHelper = new UrlHelper(request);
-            _AppUserManager = appUserManager;
+            _urlHelper = new UrlHelper(request);
+            _appUserManager = appUserManager;
         }
         /// <summary>
         /// Maps entity user to UserModel
@@ -26,12 +26,12 @@ namespace CRMService.Models
         {
             return new UserModel
             {
-                Url = _UrlHelper.Link("GetUserById", new { id = appUser.Id }),
+                Url = _urlHelper.Link("GetUserById", new { id = appUser.Id }),
                 Id = appUser.Id,
                 UserName = appUser.UserName,
                 FullName = string.Format("{0} {1}", appUser.FirstName, appUser.LastName),               
-                Roles = _AppUserManager.GetRolesAsync(appUser.Id).Result,
-                Claims = _AppUserManager.GetClaimsAsync(appUser.Id).Result
+                Roles = _appUserManager.GetRolesAsync(appUser.Id).Result,
+                Claims = _appUserManager.GetClaimsAsync(appUser.Id).Result
             };
 
         }
@@ -40,7 +40,7 @@ namespace CRMService.Models
         {
             return new RoleModel
             {
-                Url = _UrlHelper.Link("GetRoleById", new { id = appRole.Id }),
+                Url = _urlHelper.Link("GetRoleById", new { id = appRole.Id }),
                 Id = appRole.Id,
                 Name = appRole.Name
             };

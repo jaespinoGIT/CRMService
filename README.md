@@ -5,10 +5,8 @@ will work as the backend side for a CRM interface
 
 ## Table of Contents (Optional)
 
-> If your `README` has a lot of info, section headers might be nice.
-
-- [Installation]
-- [Prerequisites]
+- [Installation](#Installation)
+- [Prerequisites](#Prerequisites)
 - [Usage](#Usage)
 - [Documentation](#Documentation)
 - [Tests](#tests)
@@ -51,7 +49,7 @@ Determine your ASP.NET app's URL. In Visual Studio's Solution Explorer, select t
 4. Update the parameter in the EntityFramewwork section with the sql server instance name
 4. Open now the **Configuration.cs** file. 
 3. Update the data with your new credentials
-4. Go to Package Manager Console, choose CRMService.Infrastructure in Default project and execute the migration with the commando **update-database**
+4. Go to Package Manager Console, choose CRMService.Infrastructure in Default project and execute the migration with the commands **enable-migrations**, **add-migration migrationName** and **update-database**
 
 ### Usage
 1. First needs an auth token, build and run the app, and visit issuer token url (default https://localhost:44300/oauth/token) with PostMan 

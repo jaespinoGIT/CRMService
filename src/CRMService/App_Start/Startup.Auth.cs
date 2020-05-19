@@ -39,7 +39,7 @@ namespace CRMService
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(1),
                 Provider = new CustomOAuthProvider(),
                 //Auth server
-                AccessTokenFormat = new CustomJwtFormat("https://localhost:44300/")
+                AccessTokenFormat = new CustomJwtFormat(ConfigurationManager.AppSettings["authIssuerrUrl"])
             };
 
             // OAuth 2.0 Bearer Access Token Generation
@@ -49,7 +49,7 @@ namespace CRMService
         private void ConfigureOAuthTokenConsumption(IAppBuilder app)
         {
 
-            var issuer = "https://localhost:44300/";
+            var issuer = ConfigurationManager.AppSettings["authIssuerrUrl"];
             //Audience and secret of the authentication server
             string audienceId = ConfigurationManager.AppSettings["as:AudienceId"];
             byte[] audienceSecret = TextEncodings.Base64Url.Decode(ConfigurationManager.AppSettings["as:AudienceSecret"]);

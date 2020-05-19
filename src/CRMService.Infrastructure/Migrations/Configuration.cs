@@ -36,7 +36,7 @@ namespace CRMService.Data.Migrations
                 LastName = "LastName"
             };
 
-            manager.Create(user, "&vU$8j8MDzyj3o");
+            manager.Create(user, "YOURPASSWORD");
 
             if (roleManager.Roles.Count() == 0)
             {
