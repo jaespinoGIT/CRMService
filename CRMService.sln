@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRMService.Core.UnitTests",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRMService.UnitTests", "test\CRMService.UnitTests\CRMService.UnitTests.csproj", "{01E1C240-5305-424B-B41A-766DB3CF93EE}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{6AD36A1A-E99C-49BC-BED4-249DE9C4AF3D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{01E1C240-5305-424B-B41A-766DB3CF93EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01E1C240-5305-424B-B41A-766DB3CF93EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01E1C240-5305-424B-B41A-766DB3CF93EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AD36A1A-E99C-49BC-BED4-249DE9C4AF3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AD36A1A-E99C-49BC-BED4-249DE9C4AF3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AD36A1A-E99C-49BC-BED4-249DE9C4AF3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AD36A1A-E99C-49BC-BED4-249DE9C4AF3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

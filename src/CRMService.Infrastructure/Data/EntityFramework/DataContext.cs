@@ -21,9 +21,9 @@ namespace CRMService.Infrastructure.Data.EntityFramework
         {
             Configuration.ProxyCreationEnabled = false;
             Configuration.LazyLoadingEnabled = false;
-#if DEBUG
+
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataContext, Configuration>());
-#endif
+
         }
 
         public DbSet<Customer> Customers { get; set; }          
