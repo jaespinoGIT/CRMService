@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroup')]/providers/Microsoft.Sql/servers/crmservicegithub20200519162001dbserver/databases/CRMService_db",
+      "type": "mssql.azure",
+      "connectionId": "CRMServiceConnectionString",
+      "secretStore": "AzureAppSettings"
+    }
+  }
+}

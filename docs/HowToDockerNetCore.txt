@@ -1,0 +1,43 @@
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
+WORKDIR /app
+EXPOSE 44300
+
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
+WORKDIR /src
+
+
+COPY CRMService/CRMService.csproj CRMService/
+COPY CRMService.Core/*.csproj ../CRMService.Core/
+COPY CRMService.Infrastructure/*.csproj ../CRMService.Infrastructure/
+RUN dotnet restore "CRMService/CRMService.csproj"
+COPY . .
+WORKDIR "/src/CRMService"
+RUN dotnet build "CRMService.csproj" -c Release -o /app
+
+FROM build AS publish
+RUN dotnet publish "CRMService.csproj" -c Release -o /app
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app .
+ENTRYPOINT ["dotnet", "CRMService.dll"]
+
+RUN chmod +x ./entrypoint.sh
+CMD /bin/bash ./entrypoint.sh
+
+
+Step 12/20 : RUN dotnet build "CRMService.csproj" -c Release -o /app
+ ---> Running in c8db7e62e8dc
+Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Core
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  Determining projects to restore...
+  Nothing to do. None of the projects specified contain packages to restore.
+/src/CRMService/CRMService.csproj(415,3): error MSB4019: The imported project "/usr/share/dotnet/sdk/3.1.300/Microsoft/VisualStudio/v16.0/WebApplications/Microsoft.WebApplication.targets" was not found. Confirm that the 
+
+Build FAILED.
+
+/src/CRMService/CRMService.csproj(415,3): error MSB4019: The imported project "/usr/share/dotnet/sdk/3.1.300/Microsoft/VisualStudio/v16.0/WebApplications/Microsoft.WebApplication.targets" was not found. Confirm that the 
+expression in the Import declaration "/usr/share/dotnet/sdk/3.1.300/Microsoft/VisualStudio/v16.0/WebApplications/Microsoft.WebApplication.targets" is correct, and that the file exists on disk.
+    0 Warning(s)
+    1 Error(s)
